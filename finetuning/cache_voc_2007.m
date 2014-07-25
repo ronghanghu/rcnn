@@ -11,5 +11,5 @@ gpu_id = 0;
 % cache test
 imdb_test = imdb_from_voc('datasets/VOCdevkit2007', 'test', '2007');
 output_dir = '/x/ronghang/voc2007/test';
-rcnn_make_window_file(imdb_test, 'external/caffe/examples/pascal-finetuning');
+% rcnn_make_window_file(imdb_test, 'external/caffe/examples/pascal-finetuning');
 rcnn_make_spp_cache(imdb_test, output_dir, net_proto_file, net_binary_file, gpu_id);

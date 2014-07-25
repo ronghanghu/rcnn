@@ -1,0 +1,121 @@
+layers {
+  name: "spp5-data"
+  top: "spp5"
+  top: "label"
+  type: SPP_WINDOW_DATA
+  spp_window_data_param {
+    source: "window_file_voc_2007_test.txt"
+    cache_dir: "/x/ronghang/voc2007/test"
+    batch_size: 128
+    spp5_dim: 12800
+    fg_threshold: 0.5
+    bg_threshold: 0.5
+    fg_fraction: 0.25
+  }
+}
+layers {
+  name: "sppfc6"
+  type: INNER_PRODUCT
+  bottom: "spp5"
+  top: "sppfc6"
+  blobs_lr: 1
+  blobs_lr: 2
+  weight_decay: 1
+  weight_decay: 0
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layers {
+  name: "relu6"
+  type: RELU
+  bottom: "sppfc6"
+  top: "sppfc6"
+}
+layers {
+  name: "drop6"
+  type: DROPOUT
+  bottom: "sppfc6"
+  top: "sppfc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layers {
+  name: "sppfc7"
+  type: INNER_PRODUCT
+  bottom: "sppfc6"
+  top: "sppfc7"
+  blobs_lr: 1
+  blobs_lr: 2
+  weight_decay: 1
+  weight_decay: 0
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layers {
+  name: "relu7"
+  type: RELU
+  bottom: "sppfc7"
+  top: "sppfc7"
+}
+layers {
+  name: "drop7"
+  type: DROPOUT
+  bottom: "sppfc7"
+  top: "sppfc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layers {
+  bottom: "sppfc7"
+  top: "fc8_pascal"
+  name: "fc8_pascal"
+  type: INNER_PRODUCT
+  blobs_lr: 10
+  blobs_lr: 20
+  weight_decay: 1
+  weight_decay: 0
+  inner_product_param {
+    num_output: 21
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layers {
+  bottom: "prob"
+  bottom: "label"
+  top: "accuracy"
+  name: "accuracy"
+  type: ACCURACY
+}
+layers {
+  bottom: "fc8_pascal"
+  bottom: "label"
+  name: "loss"
+  type: SOFTMAX_LOSS
+}
