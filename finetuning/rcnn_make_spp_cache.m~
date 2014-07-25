@@ -24,38 +24,33 @@ function rcnn_make_spp_cache(imdb, out_dir)
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
+load rcnn_model_spp.mat;
 roidb = imdb.roidb_func(imdb);
 
-
-
-window_file = sprintf('%s/window_file_%s.txt', ...
-    out_dir, imdb.name);
-fid = fopen(window_file, 'wt');
-
-channels = 3; % three channel images
-
 for i = 1:length(imdb.image_ids)
-  tic_toc_print('make window file: %d/%d\n', i, length(imdb.image_ids));
+  fprintf('caching feature: %d/%d\n', i, length(imdb.image_ids));
   img_path = imdb.image_at(i);
   roi = roidb.rois(i);
   num_boxes = size(roi.boxes, 1);
-  fprintf(fid, '# %d\n', i-1);
-  fprintf(fid, '%s\n', img_path);
-  fprintf(fid, '%d\n%d\n%d\n', ...
-      channels, ...
-      imdb.sizes(i, 1), ...
-      imdb.sizes(i, 2));
-  fprintf(fid, '%d\n', num_boxes);
+  
+  % extract features
+  tic
+  im = imread(img_path);
+  % the roi.boxes are [x1 y1 x2 y2], 1-indexed
+  feat = spp_features_5_scale(im, roi.boxes, rcnn_model);
+  toc
+  
+  % store features to disk
+  im_id = i - 1;
+  mkdir(fullfile(out_dir, num2str(im_id)));
   for j = 1:num_boxes
-    [ov, label] = max(roi.overlap(j,:));
-    % zero overlap => label = 0 (background)
-    if ov < 1e-5
-      label = 0;
-      ov = 0;
-    end
-    bbox = roi.boxes(j,:)-1;
-    fprintf(fid, '%d %.3f %d %d %d %d\n', ...
-        label, ov, bbox(1), bbox(2), bbox(3), bbox(4));
+    bbox = roi.boxes(j,:)-1; % bbox is [x1 y1 x2 y2], 0-indexed
+    % file name: $(im_id)/$x1_$y1_$x2_$y2.spp5feat
+    file_name = sprintf('%d_%d_%d_%d.spp5feat', bbox(1), bbox(2), bbox(3), bbox(4));
+    file_path = fullfile(out_dir, num2str(im_id), file_name);
+    fid = fopen(file_path, 'w');
+    fwrite(fid, 
+    keyboard
   end
 end
 
