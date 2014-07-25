@@ -70,10 +70,10 @@ for scale = 1:scale_num
   % 0-indexed)
   resized_boxes = (boxes - 1) * zoom_factors(scale) + 1;
   conv5_windows = single(round((resized_boxes(:, [2 1 4 3]) - conv5_edge_on_image) / conv5_stride));
+  % make sure the windows fit into the conv5 maps
+  conv5_windows = min(max(conv5_windows, 0), conv5_sizes(scale) - 1);
   % add 1 to the ends
   conv5_windows(:, [3, 4]) = conv5_windows(:, [3, 4]) + 1;
-  % make sure the windows fit into the conv5 maps
-  conv5_windows = min(max(conv5_windows, 0), conv5_sizes(scale));
   % set width to be the fastest dimension
   conv5_windows = permute(conv5_windows, [2, 1]);
   is_matched = (scale - 1 == conv5_scales);
