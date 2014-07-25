@@ -59,5 +59,3 @@ for i = 1:length(imdb.image_ids)
     fclose(fid);
   end
 end
-
-fclose(fid);
