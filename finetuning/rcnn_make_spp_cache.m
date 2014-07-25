@@ -40,11 +40,9 @@ for i = 1:length(imdb.image_ids)
   num_boxes = size(roi.boxes, 1);
   
   % extract features
-  tic
   im = imread(img_path);
   % the roi.boxes are [x1 y1 x2 y2], 1-indexed
   feat = spp_features_5_scale(im, roi.boxes, rcnn_model_spp);
-  toc
   
   % store features to disk
   im_id = i - 1;
