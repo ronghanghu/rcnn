@@ -32,4 +32,6 @@ else
   caffe('set_mode_gpu');
 end
 caffe('set_phase_test');
+gpu_id = 1;
+caffe('set_device', gpu_id);
 rcnn_model.cnn.layers = caffe('get_weights');

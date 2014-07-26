@@ -31,14 +31,14 @@ ip.addOptional('end', 0, @isscalar);
 ip.addOptional('crop_mode', 'warp', @isstr);
 ip.addOptional('crop_padding', 16, @isscalar);
 ip.addOptional('net_file', ...
-    './data/caffe_nets/finetune_voc_2007_trainval_iter_70k', ...
+    'external/caffe/examples/spp-rcnn-feat-cache/spp_rcnn_output_spp5.bin', ...
     @isstr);
 ip.addOptional('cache_name', ...
     'v1_finetune_voc_2007_trainval_iter_70000', @isstr);
 
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
-opts.net_def_file = './model-defs/rcnn_batch_256_output_pool5.prototxt';
+opts.net_def_file = 'external/caffe/examples/spp-rcnn-feat-cache/spp_rcnn_output_spp5.prototxt';
 
 image_ids = imdb.image_ids;
 if opts.end == 0
@@ -86,7 +86,7 @@ for i = opts.start:opts.end
   im = imread(imdb.image_at(i));
 
   th = tic;
-  d.feat = rcnn_features(im, d.boxes, rcnn_model);
+  d.feat = spp_features_5_scale(im, d.boxes, rcnn_model);
   fprintf(' [features: %.3fs]\n', toc(th));
 
   th = tic;
