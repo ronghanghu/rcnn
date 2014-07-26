@@ -31,14 +31,14 @@ ip.addOptional('end', 0, @isscalar);
 ip.addOptional('crop_mode', 'warp', @isstr);
 ip.addOptional('crop_padding', 16, @isscalar);
 ip.addOptional('net_file', ...
-    'external/caffe/examples/spp-rcnn-feat-cache/spp_rcnn_output_spp5.bin', ...
+    './data/caffe_nets/finetune_voc_2007_trainval_iter_70k', ...
     @isstr);
 ip.addOptional('cache_name', ...
     'v1_finetune_voc_2007_trainval_iter_70000', @isstr);
 
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
-opts.net_def_file = 'external/caffe/examples/spp-rcnn-feat-cache/spp_rcnn_output_spp5.prototxt';
+opts.net_def_file = './model-defs/spp_rcnn_output_spp5.prototxt';
 
 image_ids = imdb.image_ids;
 if opts.end == 0
