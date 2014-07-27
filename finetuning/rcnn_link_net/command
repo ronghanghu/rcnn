@@ -1,0 +1,2 @@
+export PYTHONPATH=/home/ronghang/workspace/caffe/python/:$PYTHONPATH
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6:/usr/lib/x86_64-linux-gnu/libm.so python ./link_conv_with_ft.py

@@ -42,6 +42,7 @@ for i = 1:length(imdb.image_ids)
   th1 = tic();
   img_path = imdb.image_at(i);
   roi = roidb.rois(i);
+  roi.boxes = roi.boxes(1, :); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   num_boxes = size(roi.boxes, 1);
   im = imread(img_path);
   % the roi.boxes are [x1 y1 x2 y2], 1-indexed

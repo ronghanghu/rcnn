@@ -1,6 +1,6 @@
 net_proto_file = './model-defs/spp_rcnn_output_spp5.prototxt';
 net_binary_file = './data/caffe_nets/finetune_voc_2007_spp_trainval_iter_20000';
-save_as_mat = false;
+save_as_mat = true;
 gpu_id = 1;
 
 % cache trainval
