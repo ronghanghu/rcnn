@@ -29,23 +29,24 @@ roidb = imdb.roidb_func(imdb);
 
 % initialize caffe
 caffe('init', net_proto_file, net_binary_file);
-caffe('set_device', gpu_id);
 caffe('set_phase_test');
 caffe('set_mode_gpu');
+caffe('set_device', gpu_id);
 
 for i = 1:length(imdb.image_ids)
   th0 = tic();
+  fprintf('------------------------------------------------------------\n');
   fprintf('caching feature: %d/%d\n', i, length(imdb.image_ids));
   
   % extract features
-  th1 = tic()
+  th1 = tic();
   img_path = imdb.image_at(i);
   roi = roidb.rois(i);
   num_boxes = size(roi.boxes, 1);
   im = imread(img_path);
   % the roi.boxes are [x1 y1 x2 y2], 1-indexed
   feat = spp_features_5_scale(im, roi.boxes, rcnn_model_spp);
-  fprintf('[Extracting feature: %f]\n', toc(th1));
+  fprintf('\n[Extracting feature: %f]\n', toc(th1));
   
   % store features to disk
   th2 = tic();
