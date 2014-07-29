@@ -187,7 +187,7 @@ layers {
   bottom: "conv5"
   bottom: "conv5_windows"
   bottom: "conv5_scales"
-  top: "spp5"
+  top: "pool5"
   spatial_pyramid_pooling_param {
     pool: MAX
     spatial_bin: 6
@@ -197,7 +197,7 @@ layers {
   }
 }
 layers {
-  bottom: "spp5"
+  bottom: "pool5"
   top: "fc6"
   name: "fc6"
   type: INNER_PRODUCT
