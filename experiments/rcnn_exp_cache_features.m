@@ -1,7 +1,7 @@
 function rcnn_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
-net_file     = 'external/caffe/examples/spp-rcnn-feat-cache/spp_rcnn_output_spp5.bin';
+net_file     = './data/caffe_nets/spp_zf_iter_315000';
 cache_name   = 'v1_finetune_voc_2007_trainval_iter_70k';
 crop_mode    = 'warp';
 crop_padding = 16;

@@ -15,8 +15,11 @@ function feat = spp_features(im, boxes, rcnn_model)
 % TODO: move these parameters into rcnn_model
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
-fixed_sizes = [480, 576, 688, 864,1200]';
-conv5_sizes = [ 29,  35,  42,  53,  73]';
+
+error('please use the 5 scale version');
+
+fixed_sizes = 688;
+conv5_sizes = 42;
 max_proposal_num = 2500;
 conv5_edge_on_image = 18; % Alex net
 % conv5_edge_on_image = 17; % Zeiler & Fergus net
