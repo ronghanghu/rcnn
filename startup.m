@@ -16,6 +16,7 @@ addpath('bin');
 addpath('nms');
 addpath('finetuning');
 addpath('bbox_regression');
+addpath('image_level_context');
 if exist('external/caffe/matlab/caffe')
   addpath('external/caffe/matlab/caffe');
 else
