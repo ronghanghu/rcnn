@@ -1,4 +1,4 @@
-function feat = spp_features(im, boxes, rcnn_model)
+function feat = spp_features_5_scale_(im, boxes, rcnn_model)
 % feat = spp_features(im, boxes, rcnn_model)
 %   Compute Spatial Pyramid Pooling features on a set of boxes.
 %
@@ -16,11 +16,10 @@ function feat = spp_features(im, boxes, rcnn_model)
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
 fixed_sizes = [480, 576, 688, 864,1200]';
-conv5_sizes = [ 29,  35,  42,  53,  73]';
-max_proposal_num = 2500;
-conv5_edge_on_image = 18; % Alex net
-% conv5_edge_on_image = 17; % Zeiler & Fergus net
+conv5_sizes = [ 28,  34,  41,  52,  73]'; % Zeiler & Fergus net
+conv5_edge_on_image = 17; % Zeiler & Fergus net
 conv5_stride = 16;
+max_proposal_num = 2500;
 
 % calculate the channel (BGR) mean from image mean
 image_mean = rcnn_model.cnn.image_mean;
