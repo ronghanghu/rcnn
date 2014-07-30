@@ -17,7 +17,6 @@ function feat = spp_features_5_scale_(im, boxes, rcnn_model)
 % corresponding network prototext file
 fixed_sizes = [480, 576, 688, 864,1200]';
 conv5_sizes = [ 28,  34,  41,  52,  73]'; % Zeiler & Fergus net
-conv5_edge_on_image = 17; % Zeiler & Fergus net
 conv5_stride = 16;
 max_proposal_num = 2500;
 
@@ -40,8 +39,8 @@ fixed_hs = round(min(image_h * zoom_factors, fixed_sizes));
 fixed_ws = round(min(image_w * zoom_factors, fixed_sizes));
 
 % match the boxes onto optimal scale, on which the mapped boxes is
-% closest to 227*227
-desired_area = 51529; % 227*227
+% closest to 224*224
+desired_area = 224*224;
 boxes_area = (boxes(:, 4) - boxes(:, 2) + 1) .* (boxes(:, 3) - boxes(:, 1) + 1);
 zoomed_area = boxes_area * (zoom_factors.^2)';
 area_dif = abs(zoomed_area - desired_area);
@@ -65,10 +64,15 @@ for scale = 1:scale_num
   image_data = permute(image_data, [2, 1, 3]);
   multiscale_image_data(1:fixed_ws(scale), 1:fixed_hs(scale), :, scale) = image_data;
 
-  % resize the boxes and calculate the conv5 windows ([y1 x1 y2 x2],
-  % 0-indexed)
-  resized_boxes = (boxes - 1) * zoom_factors(scale) + 1;
-  conv5_windows = single(round((resized_boxes(:, [2 1 4 3]) - conv5_edge_on_image) / conv5_stride));
+  % resize the boxes and change it to [y1 x1 y2 x2], 0-indexed
+  resized_boxes = (boxes(:, [2 1 4 3]) - 1) * zoom_factors(scale); % no adding 1
+  % calculate the conv5 windows ([y1 x1 y2 x2], 0-indexed)
+  conv5_windows = zeros(size(resized_boxes), 'single');
+  conv5_windows(:, [1, 2]) = round((conv5_windows(:, [1, 2])     ) / conv5_stride); %   0 ->  0
+  conv5_windows(:, [3, 4]) = round((conv5_windows(:, [3, 4]) - 32) / conv5_stride); % 224 -> 12
+  % make sure the windows have positive area: y2 >= y1 and x2 >= x1
+  conv5_windows(:, 3) = max(conv5_windows(:, 3), conv5_windows(:, 1));
+  conv5_windows(:, 4) = max(conv5_windows(:, 4), conv5_windows(:, 2));
   % make sure the windows fit into the conv5 maps
   conv5_windows = min(max(conv5_windows, 0), conv5_sizes(scale) - 1);
   % add 1 to the ends
