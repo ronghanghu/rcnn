@@ -68,10 +68,15 @@ for scale = 1:scale_num
   resized_boxes = (boxes(:, [2 1 4 3]) - 1) * zoom_factors(scale); % no adding 1
   % calculate the conv5 windows ([y1 x1 y2 x2], 0-indexed)
   conv5_windows = zeros(size(resized_boxes), 'single');
+  
+  % Ronghang Mapping, 225x225 -> 15x15
   conv5_windows(:, [1, 2]) = round((resized_boxes(:, [1, 2]) - 16) / conv5_stride); % 112 -> 6
   conv5_windows(:, [3, 4]) = round((resized_boxes(:, [3, 4]) - 16) / conv5_stride);
+  
+  % % Kaiming Mapping, 225x225 -> 13x13
   % conv5_windows(:, [1, 2]) = round((resized_boxes(:, [1, 2]) -  0) / conv5_stride); %   0 ->  0
   % conv5_windows(:, [3, 4]) = round((resized_boxes(:, [3, 4]) - 32) / conv5_stride); % 224 -> 12
+  
   % make sure the windows have positive area: y2 >= y1 and x2 >= x1
   conv5_windows(:, 3) = max(conv5_windows(:, 3), conv5_windows(:, 1));
   conv5_windows(:, 4) = max(conv5_windows(:, 4), conv5_windows(:, 2));
