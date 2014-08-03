@@ -15,8 +15,8 @@ VOCdevkit = './datasets/VOCdevkit2007';
 
 imdb_train = imdb_from_voc(VOCdevkit, 'trainval', '2007');
 imdb_test = imdb_from_voc(VOCdevkit, 'test', '2007');
-roidb_train = roidb_from_voc(VOCdevkit, 'trainval', '2007');
-% roidb_test = roidb_from_voc(VOCdevkit, 'test', '2007');
+roidb_train = roidb_from_voc(imdb_train);
+% roidb_test = roidb_from_voc(imdb_test);
 
 [rcnn_model, rcnn_k_fold_model] = ...
     rcnn_train_nms(imdb_train, ...
