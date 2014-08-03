@@ -1,5 +1,5 @@
 function [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_train(imdb, varargin)
+    rcnn_train(imdb, roidb, varargin)
 % [rcnn_model, rcnn_k_fold_model] = rcnn_train(imdb, varargin)
 %   Trains an R-CNN detector for all classes in the imdb.
 %   
@@ -31,6 +31,7 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
+ip.addRequired('roidb', @isstruct);
 ip.addParamValue('svm_C',           10^-3,  @isscalar);
 ip.addParamValue('max_num_neg',     100000, @isscalar);
 ip.addParamValue('bias_mult',       10,     @isscalar);
@@ -47,7 +48,7 @@ ip.addParamValue('cache_name', ...
     'v1_finetune_voc_2007_trainval_iter_70000', @isstr);
 
 
-ip.parse(imdb, varargin{:});
+ip.parse(imdb, roidb, varargin{:});
 opts = ip.Results;
 
 opts.net_def_file = './model-defs/spp_output_fc7.prototxt';
@@ -119,7 +120,7 @@ for hard_epoch = 1:max_hard_epochs
     % Get hard negatives for all classes at once (avoids loading feature cache
     % more than once)
     [X, keys] = sample_negative_features(first_time, rcnn_model, caches, ...
-        imdb, i);
+        imdb, roidb, i);
 
     % Add sampled negatives to each classes training cache, removing
     % duplicates
@@ -213,7 +214,7 @@ end
 
 % ------------------------------------------------------------------------
 function [X_neg, keys] = sample_negative_features(first_time, rcnn_model, ...
-                                                  caches, imdb, ind)
+                                                  caches, imdb, roidb, ind)
 % ------------------------------------------------------------------------
 opts = rcnn_model.training_opts;
 
@@ -230,8 +231,12 @@ end
 
 d.feat = rcnn_pool5_to_fcX(d.feat, opts.layer, rcnn_model);
 d.feat = rcnn_scale_features(d.feat, opts.feat_norm_mean);
+% load selective search boxes for NMS on negative windows
+d.boxes = roidb.rois(ind).boxes;
+assert(size(d.boxes, 1) == size(d.feat, 1));
 
 neg_ovr_thresh = 0.3;
+neg_nms_thresh = 0.7;
 
 if first_time
   for cls_id = class_ids
@@ -253,6 +258,13 @@ else
       keep = setdiff(1:size(keys_,1), dups);
       I = I(keep);
     end
+
+    % Run NMS on negative windows. Keep samples with higher z (harder samples)
+    scored_boxes = [d.boxes(I, :), z(I)];
+    keep = nms(scored_boxes, neg_nms_thresh);
+    fprintf('keeping %d hard negatives out of %d after nms\n', ...
+        length(keep), length(I));
+    I = I(keep);
 
     % Unique hard negatives
     X_neg{cls_id} = d.feat(I,:);
