@@ -38,7 +38,7 @@ ip.addOptional('cache_name', ...
 
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
-opts.net_def_file = './model-defs/spp_zf_output_spp5.prototxt';
+opts.net_def_file = './model-defs/spp_output_pool5.prototxt';
 
 image_ids = imdb.image_ids;
 if opts.end == 0

@@ -32,7 +32,7 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
 ip.addParamValue('svm_C',           10^-3,  @isscalar);
-ip.addParamValue('max_num_neg',     25000,  @isscalar);
+ip.addParamValue('max_num_neg',     100000, @isscalar);
 ip.addParamValue('bias_mult',       10,     @isscalar);
 ip.addParamValue('pos_loss_weight', 2,      @isscalar);
 ip.addParamValue('layer',           7,      @isscalar);
@@ -50,7 +50,7 @@ ip.addParamValue('cache_name', ...
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
 
-opts.net_def_file = './model-defs/spp_zf_output_fc7.prototxt';
+opts.net_def_file = './model-defs/spp_output_fc7.prototxt';
 
 conf = rcnn_config('sub_dir', imdb.name);
 
