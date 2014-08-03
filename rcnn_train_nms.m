@@ -1,5 +1,5 @@
 function [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_train_nms(imdb, varargin)
+    rcnn_train(imdb, varargin)
 % [rcnn_model, rcnn_k_fold_model] = rcnn_train(imdb, varargin)
 %   Trains an R-CNN detector for all classes in the imdb.
 %   
@@ -32,6 +32,7 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
 ip.addParamValue('svm_C',           10^-3,  @isscalar);
+ip.addParamValue('max_num_neg',     25000,  @isscalar);
 ip.addParamValue('bias_mult',       10,     @isscalar);
 ip.addParamValue('pos_loss_weight', 2,      @isscalar);
 ip.addParamValue('layer',           7,      @isscalar);
@@ -278,6 +279,12 @@ end
 if ~exist('neg_inds', 'var') || isempty(neg_inds)
   num_neg = size(cache.X_neg, 1);
   neg_inds = 1:num_neg;
+  if num_neg > opts.max_num_neg
+    num_neg = opts.max_num_neg;
+    neg_inds = randsample(neg_inds, opts.max_num_neg);
+    fprintf('[subset mode] using %d out of %d total negatives\n', ...
+      num_neg, size(cache.X_neg,1));
+  end
 else
   num_neg = length(neg_inds);
   fprintf('[subset mode] using %d out of %d total negatives\n', ...
