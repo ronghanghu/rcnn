@@ -32,7 +32,7 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
 ip.addRequired('roidb', @isstruct);
-ip.addParamValue('svm_C',           1,      @isscalar);
+ip.addParamValue('svm_C',           10^-3,  @isscalar);
 ip.addParamValue('max_num_neg',     100000, @isscalar);
 ip.addParamValue('bias_mult',       10,     @isscalar);
 ip.addParamValue('pos_loss_weight', 2,      @isscalar);

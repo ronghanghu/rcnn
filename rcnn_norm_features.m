@@ -9,6 +9,6 @@ function f = rcnn_norm_features(f, ~)
 % seems to work well. In practice, the optimal value for C ends up being the
 % same across all features.
 
+target_norm = 20;
 L2_norms = sqrt(sum(f.^2, 2));
-
-f = bsxfun(@rdivide, f, L2_norms);
+f = target_norm * bsxfun(@rdivide, f, L2_norms);
