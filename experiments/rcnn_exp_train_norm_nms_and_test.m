@@ -28,9 +28,9 @@ roidb_train = roidb_from_voc(imdb_train);
       'crop_padding', crop_padding);
 
 if k_folds > 0
-  res_train = rcnn_test(rcnn_k_fold_model, imdb_train);
+  res_train = rcnn_test_norm(rcnn_k_fold_model, imdb_train);
 else
   res_train = [];
 end
 
-res_test = rcnn_test(rcnn_model, imdb_test);
+res_test = rcnn_test_norm(rcnn_model, imdb_test);
