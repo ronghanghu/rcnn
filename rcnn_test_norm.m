@@ -14,6 +14,8 @@ function res = rcnn_test(rcnn_model, imdb, suffix)
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
+error('deprecated');
+
 conf = rcnn_config('sub_dir', imdb.name);
 image_ids = imdb.image_ids;
 

@@ -29,6 +29,8 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 % TODO:
 %  - allow training just a subset of classes
 
+error('deprecated');
+
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
 ip.addParamValue('svm_C',           10^-3,  @isscalar);
