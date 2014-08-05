@@ -16,7 +16,7 @@ function feat = spp_features_1_scale_(im, boxes, rcnn_model)
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
 fixed_sizes = [917]';
-conv5_sizes = [ 38]'; % Zeiler & Fergus net
+conv5_sizes = [ 56]'; % Zeiler & Fergus net
 conv5_stride = 16;
 max_proposal_num = 2500;
 
