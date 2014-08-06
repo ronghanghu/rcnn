@@ -1,20 +1,28 @@
 net_proto_file = './model-defs/spp_output_pool5.prototxt';
 net_binary_file = './data/caffe_nets/spp_zf_iter_315000';
-save_as_mat = false;
 gpu_id = 0;
+caffe('set_mode_gpu');
+caffe('set_device', gpu_id);
+
+spp_window_data_param.spp5_dim = 12800;
+spp_window_data_param.batch_per_file = 20;
+spp_window_data_param.batch_size = 128;
+spp_window_data_param.fg_fraction = 0.25;
+spp_window_data_param.fg_overlap_max = 1000; % large than 1
+spp_window_data_param.fg_overlap_min = 0.5;
+spp_window_data_param.bg_overlap_max = 0.5;
+spp_window_data_param.bg_overlap_min = 0.1;
 
 % make imdb
 imdb_trainval = imdb_from_voc('datasets/VOCdevkit2007', 'trainval', '2007');
 imdb_test = imdb_from_voc('datasets/VOCdevkit2007', 'test', '2007');
 
-% make window data file
-rcnn_make_window_file(imdb_trainval, 'external/caffe/examples/pascal-finetuning-spp');
-rcnn_make_window_file(imdb_test, 'external/caffe/examples/pascal-finetuning-spp');
-
 % cache trainval
 output_dir = '/x/ronghang/voc2007/trainval';
-rcnn_make_spp_cache(imdb_trainval, output_dir, net_proto_file, net_binary_file, save_as_mat, gpu_id);
+rcnn_make_spp_cache(imdb_trainval, output_dir, ...
+    net_proto_file, net_binary_file, spp_window_data_param);
 
 % cache test
 output_dir = '/x/ronghang/voc2007/test';
-rcnn_make_spp_cache(imdb_test, output_dir, net_proto_file, net_binary_file, save_as_mat, gpu_id);
+rcnn_make_spp_cache(imdb_test, output_dir, ...
+    net_proto_file, net_binary_file, spp_window_data_param);
