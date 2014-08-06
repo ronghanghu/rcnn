@@ -36,6 +36,9 @@ bg_overlap_min = spp_window_data_param.bg_overlap_min;
 
 load rcnn_model_spp.mat;
 roidb = imdb.roidb_func(imdb);
+if ~exist(out_dir, 'dir')
+  mkdir(out_dir);
+end
 
 % initialize caffe
 caffe('init', net_proto_file, net_binary_file);
