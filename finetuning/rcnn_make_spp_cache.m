@@ -73,14 +73,12 @@ for i = 1:length(imdb.image_ids)
   bg_cache = cat(1, bg_cache, feat(is_bg, :));
   
   % store features to disk
-  if size(fg_cache, 1) >= fg_limit
+  if size(fg_cache, 1) >= fg_limit && size(bg_cache, 1) >= bg_limit
     th2 = tic();
-    fg_num = size(fg_cache, 1);
-    bg_num = size(bg_cache, 1);
     fprintf('------------------------------------------------------------\n');
-    fprintf('saving file id %d', file_id);
-    fprintf('\t#fg in cache: %d\n', fg_num);
-    fprintf('\t#bg in cache: %d\n', bg_num);
+    fprintf('saving file id %d\n', file_id);
+    fprintf('\t#fg in cache: %d\n', size(fg_cache, 1));
+    fprintf('\t#bg in cache: %d\n', size(bg_cache, 1));
     % assume that background windows are much more than foreground windows
     assert(bg_num >= bg_limit);
     % subsample background windows
