@@ -66,8 +66,9 @@ for i = 1:length(imdb.image_ids)
   fprintf('\n[Extracting feature: %f]\n', toc(th1));
   
   % put features into fg cache and bg cache
-  is_fg = (roi.overlap >= fg_overlap_min) & (roi.overlap <= fg_overlap_max);
-  is_bg = (roi.overlap >  bg_overlap_min) & (roi.overlap <  bg_overlap_max);
+  gt_overlap = max(roi.overlap, [], 2);
+  is_fg = (gt_overlap >= fg_overlap_min) & (gt_overlap <= fg_overlap_max);
+  is_bg = (gt_overlap >  bg_overlap_min) & (gt_overlap <  bg_overlap_max);
   fg_cache = cat(1, fg_cache, feat(is_fg, :));
   bg_cache = cat(1, bg_cache, feat(is_bg, :));
   
