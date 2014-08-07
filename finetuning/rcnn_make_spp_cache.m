@@ -1,5 +1,5 @@
 function rcnn_make_spp_cache(imdb, net_proto_file, net_binary_file, ...
-    spp_window_data_param)
+    spp_feat_cache_param)
 % rcnn_make_window_file(imdb, out_dir)
 %   Makes a window file that can be used by the caffe WindowDataLayer
 %   for finetuning.
@@ -25,16 +25,16 @@ function rcnn_make_spp_cache(imdb, net_proto_file, net_binary_file, ...
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
-feat_dim = spp_window_data_param.feat_dim;
-batch_per_file = spp_window_data_param.batch_per_file;
-batch_size = spp_window_data_param.batch_size;
-fg_fraction = spp_window_data_param.fg_fraction;
-fg_overlap_max = spp_window_data_param.fg_overlap_max; % large than 1
-fg_overlap_min = spp_window_data_param.fg_overlap_min;
-bg_overlap_max = spp_window_data_param.bg_overlap_max;
-bg_overlap_min = spp_window_data_param.bg_overlap_min;
-extension = spp_window_data_param.extension;
-cache_dir = spp_window_data_param.cache_dir;
+feat_dim = spp_feat_cache_param.feat_dim;
+batch_per_file = spp_feat_cache_param.batch_per_file;
+batch_size = spp_feat_cache_param.batch_size;
+fg_fraction = spp_feat_cache_param.fg_fraction;
+fg_overlap_max = spp_feat_cache_param.fg_overlap_max; % large than 1
+fg_overlap_min = spp_feat_cache_param.fg_overlap_min;
+bg_overlap_max = spp_feat_cache_param.bg_overlap_max;
+bg_overlap_min = spp_feat_cache_param.bg_overlap_min;
+extension = spp_feat_cache_param.extension;
+cache_dir = spp_feat_cache_param.cache_dir;
 
 load rcnn_model_spp.mat;
 roidb = imdb.roidb_func(imdb);
