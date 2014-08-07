@@ -88,9 +88,9 @@ for i = 1:length(imdb.image_ids)
   if has_residue_at_end || hits_limit
     th2 = tic();
     fprintf('------------------------------------------------------------\n');
-    fprintf('saving file %d\n', file_id);
-    fprintf('\t#fg in cache: %d\n', size(fg_cache, 1));
-    fprintf('\t#bg in cache: %d\n', size(bg_cache, 1));
+    fprintf('saving file %d%s\n', file_id, extension);
+    fprintf('\t#fg in cache: %d\n', fg_num);
+    fprintf('\t#bg in cache: %d\n', bg_num);
     
     % calculate the actual number of batches in this file
     actual_batch_num = ...
@@ -99,7 +99,7 @@ for i = 1:length(imdb.image_ids)
       actual_batch_num = min(actual_batch_num, batch_per_file);
     end
     if actual_batch_num ~= batch_per_file
-      fprintf('Notice: there are %d batches in this file', actual_batch_num);
+      fprintf('Notice: there are %d batches in this file\n', actual_batch_num);
     end
 
     % subsample background windows
