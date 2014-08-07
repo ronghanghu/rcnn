@@ -22,9 +22,9 @@ imdb_test = imdb_from_voc('datasets/VOCdevkit2007', 'test', '2007');
 % cache trainval
 spp_feat_cache_param.cache_dir = '/x/ronghang/voc2007/trainval';
 rcnn_make_spp_cache(imdb_trainval, ...
-    net_proto_file, net_binary_file, spp_window_data_param);
+    net_proto_file, net_binary_file, spp_feat_cache_param);
 
 % cache test
 spp_feat_cache_param.cache_dir = '/x/ronghang/voc2007/test';
 rcnn_make_spp_cache(imdb_test, ...
-    net_proto_file, net_binary_file, spp_window_data_param);
+    net_proto_file, net_binary_file, spp_feat_cache_param);
