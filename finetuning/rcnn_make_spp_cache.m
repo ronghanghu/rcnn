@@ -134,6 +134,7 @@ for i = 1:length(imdb.image_ids)
     % prune caches
     fg_cache = fg_cache((fg_per_batch * actual_batch_num+1):end, :);
     bg_cache = [];
+    fg_label_cache = fg_label_cache((fg_per_batch * actual_batch_num+1):end);
     file_id = file_id + 1;
     fprintf('[Saving feature: %f]\n', toc(th2));
   end
