@@ -1,4 +1,5 @@
-function feat = spp_features_1_scale_(im, boxes, rcnn_model)
+function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
+    conv5_sizes, conv5_stride, max_proposal_num)
 % feat = spp_features(im, boxes, rcnn_model)
 %   Compute Spatial Pyramid Pooling features on a set of boxes.
 %
@@ -10,15 +11,6 @@ function feat = spp_features_1_scale_(im, boxes, rcnn_model)
 % if rcnn_model.cnn.init_key ~= caffe('get_init_key')
 %     error('You probably need to call rcnn_load_model');
 % end
-
-% PARAMETER OF THE NETWORK
-% TODO: move these parameters into rcnn_model
-% NOTE: if you change any of these parameters, you must also change the
-% corresponding network prototext file
-fixed_sizes = [917]';
-conv5_sizes = [ 56]'; % Zeiler & Fergus net
-conv5_stride = 16;
-max_proposal_num = 2500;
 
 % calculate the channel (BGR) mean from image mean
 image_mean = rcnn_model.cnn.image_mean;
