@@ -1,4 +1,4 @@
-function [mean_norm, stdd] = rcnn_feature_stats(imdb, layer, rcnn_model)
+function [mean_norm, stdd] = rcnn_ilsvrc_feature_stats(imdb, layer, rcnn_model)
 % AUTORIGHTS
 % ---------------------------------------------------------
 % Copyright (c) 2014, Ross Girshick

@@ -38,7 +38,7 @@ imdb_train = imdb_val;
 
 
 [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_train(imdb_train, ...
+    rcnn_ilsvrc_train(imdb_train, ...
       'layer',        layer, ...
       'k_folds',      k_folds, ...
       'cache_name',   cache_name, ...
@@ -47,9 +47,9 @@ imdb_train = imdb_val;
       'crop_padding', crop_padding);
 
 if k_folds > 0
-  res_train = rcnn_test(rcnn_k_fold_model, imdb_train);
+  res_train = rcnn_ilsvrc_test(rcnn_k_fold_model, imdb_train);
 else
   res_train = [];
 end
 
-res_test = rcnn_test(rcnn_model, imdb_test);
+res_test = rcnn_ilsvrc_test(rcnn_model, imdb_test);
