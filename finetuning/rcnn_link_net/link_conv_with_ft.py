@@ -13,7 +13,7 @@ import caffe
 OLD_PROTOTXT = 'pascal_finetune_trainval.prototxt'
 # OLD_WEIGHTS = '(The network binary in fine-tuning fc layers, make sure it weights are fc or sppfc)'
 # MODIFY
-OLD_WEIGHTS = './finetune_voc_2007_spp_trainval_iter_40000'
+OLD_WEIGHTS = './finetune_voc_2007_spp_trainval_iter_300000'
 
 # the net containing original conv1~conv5 layers
 # MODIFY
@@ -21,7 +21,7 @@ NEW_PROTOTXT = '../../model-defs/spp_output_fc7.prototxt'
 NEW_WEIGHTS = '../../data/caffe_nets/spp_zf_iter_315000'
 
 # MODIFY
-OUT_FILE = '../../data/caffe_nets/finetune_voc_2007_spp_zf_trainval_iter_40000_linked'
+OUT_FILE = '../../data/caffe_nets/finetune_voc_2007_spp_zf_trainval_iter_300000_linked'
 
 # load architecture for pure Caffe net and the fine-tuned model
 old_net = caffe.Net(OLD_PROTOTXT, OLD_WEIGHTS)
