@@ -1,4 +1,4 @@
-function res = rcnn_exp_bbox_reg_train_and_test_ilsvrc13()
+function res = rcnn_ilsvrc_exp_bbox_reg_train_and_test()
 % Runs an experiment that trains a bounding box regressor and
 % tests it.
 

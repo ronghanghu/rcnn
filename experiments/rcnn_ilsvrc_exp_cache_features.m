@@ -1,4 +1,4 @@
-function rcnn_exp_cache_features_ilsvrc13(chunk)
+function rcnn_ilsvrc_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
 %net_file     = './data/caffe_nets/ilsvrc_2012_train_iter_310k';

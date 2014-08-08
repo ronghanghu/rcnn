@@ -1,4 +1,4 @@
-function [res_test, res_train] = rcnn_exp_train_norm_nms_and_test()
+function [res_test, res_train] = rcnn_pascal_exp_train_nms_and_test()
 % Runs an experiment that trains an R-CNN model and tests it.
 
 % -------------------- CONFIG --------------------
@@ -19,7 +19,7 @@ roidb_train = roidb_from_voc(imdb_train);
 % roidb_test = roidb_from_voc(imdb_test);
 
 [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_pascal_train_norm_nms(imdb_train, roidb_train, ...
+    rcnn_pascal_train_nms(imdb_train, roidb_train, ...
       'layer',        layer, ...
       'k_folds',      k_folds, ...
       'cache_name',   cache_name, ...
@@ -28,9 +28,9 @@ roidb_train = roidb_from_voc(imdb_train);
       'crop_padding', crop_padding);
 
 if k_folds > 0
-  res_train = rcnn_pascal_test_norm(rcnn_k_fold_model, imdb_train);
+  res_train = rcnn_pascal_test(rcnn_k_fold_model, imdb_train);
 else
   res_train = [];
 end
 
-res_test = rcnn_pascal_test_norm(rcnn_model, imdb_test);
+res_test = rcnn_pascal_test(rcnn_model, imdb_test);

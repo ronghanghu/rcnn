@@ -1,4 +1,4 @@
-function [res_test, res_train] = rcnn_exp_train_and_test()
+function [res_test, res_train] = rcnn_pascal_exp_train_and_test()
 % Runs an experiment that trains an R-CNN model and tests it.
 
 % -------------------- CONFIG --------------------

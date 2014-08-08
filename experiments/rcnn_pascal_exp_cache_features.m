@@ -1,4 +1,4 @@
-function rcnn_exp_cache_features(chunk)
+function rcnn_pascal_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
 net_file     = './data/caffe_nets/spp_zf_iter_315000';

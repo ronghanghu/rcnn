@@ -1,4 +1,4 @@
-function res = rcnn_exp_bbox_reg_train_and_test()
+function res = rcnn_pascal_exp_bbox_reg_train_and_test()
 % Runs an experiment that trains a bounding box regressor and
 % tests it.
 
