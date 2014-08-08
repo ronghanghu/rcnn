@@ -1,4 +1,4 @@
-function rcnn_make_window_file(imdb, out_dir)
+function rcnn_make_window_file(imdb, out_dir, window_file_name, num_to_sample)
 % rcnn_make_window_file(imdb, out_dir)
 %   Makes a window file that can be used by the caffe WindowDataLayer 
 %   for finetuning.
@@ -24,37 +24,65 @@ function rcnn_make_window_file(imdb, out_dir)
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
-roidb = imdb.roidb_func(imdb);
-
-window_file = sprintf('%s/window_file_%s.txt', ...
-    out_dir, imdb.name);
+if length(imdb) == 1 && ...
+    (~exist('window_file_name', 'var') || isempty(window_file_name))
+  window_file = sprintf('%s/window_file_%s.txt', ...
+      out_dir, imdb.name);
+else
+  assert(exist('window_file_name', 'var') && ~isempty(window_file_name));
+  window_file = sprintf('%s/window_file_%s.txt', ...
+      out_dir, window_file_name);
+end
+fprintf('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n');
+fprintf('writing window file to: %s\n', window_file)
+fprintf('~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n');
 fid = fopen(window_file, 'wt');
 
 channels = 3; % three channel images
 
-for i = 1:length(imdb.image_ids)
-  tic_toc_print('make window file: %d/%d\n', i, length(imdb.image_ids));
-  img_path = imdb.image_at(i);
-  roi = roidb.rois(i);
-  num_boxes = size(roi.boxes, 1);
-  fprintf(fid, '# %d\n', i-1);
-  fprintf(fid, '%s\n', img_path);
-  fprintf(fid, '%d\n%d\n%d\n', ...
-      channels, ...
-      imdb.sizes(i, 1), ...
-      imdb.sizes(i, 2));
-  fprintf(fid, '%d\n', num_boxes);
-  for j = 1:num_boxes
-    [ov, label] = max(roi.overlap(j,:));
-    % zero overlap => label = 0 (background)
-    if ov < 1e-5
-      label = 0;
-      ov = 0;
+skip = 0;
+image_index = 0;
+for ii = 1:length(imdb)
+  roidb = imdb(ii).roidb_func(imdb(ii));
+
+  match = regexp(imdb(ii).name, 'train_pos_(?<class_num>\d+)', 'names');
+  if ~isempty(match)
+    class_num = str2num(match.class_num);
+    inds_to_sample = subsample_images(imdb(ii), num_to_sample, class_num);
+  else
+    inds_to_sample = 1:length(imdb(ii).image_ids);
+  end
+
+  for iii = 1:length(inds_to_sample)
+    i = inds_to_sample(iii);
+    tic_toc_print('make window file (%s): %d/%d\n', ...
+        imdb(ii).name, iii, length(inds_to_sample));
+    img_path = imdb(ii).image_at(i);
+    roi = roidb.rois(i);
+    num_boxes = size(roi.boxes, 1);
+    if num_boxes > 0
+      fprintf(fid, '# %d\n', image_index);
+      fprintf(fid, '%s\n', img_path);
+      fprintf(fid, '%d\n%d\n%d\n', ...
+          channels, ...
+          imdb(ii).sizes(i, 1), ...
+          imdb(ii).sizes(i, 2));
+      fprintf(fid, '%d\n', num_boxes);
+
+      [ovs, labels] = max(roi.overlap, [], 2);
+      I = find(ovs < 1e-5);
+      ovs(I) = 0;
+      labels(I) = 0;
+      bboxes = round(roi.boxes-1);
+      bboxes(:,1) = max(0, bboxes(:,1));
+      bboxes(:,2) = max(0, bboxes(:,2));
+      bboxes(:,3) = min(imdb(ii).sizes(i, 2)-1, bboxes(:,3));
+      bboxes(:,4) = min(imdb(ii).sizes(i, 1)-1, bboxes(:,4));
+
+      data = [labels full(ovs) bboxes];
+      fprintf(fid, '%d %.3f %d %d %d %d\n', data');
+      image_index = image_index + 1;
     end
-    bbox = roi.boxes(j,:)-1;
-    fprintf(fid, '%d %.3f %d %d %d %d\n', ...
-        label, ov, bbox(1), bbox(2), bbox(3), bbox(4));
   end
 end
-
 fclose(fid);

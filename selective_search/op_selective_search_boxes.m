@@ -1,14 +1,4 @@
-function result = op_selective_search_boxes(first_el, last_el, imdb)
-% result = op_selective_search_boxes(first_el, last_el, imdb)
-%
-% Loop slice operation for distributed computation of selective search
-% boxes.
-%
-% This function depends on simple-cluster-lib, which is specific to 
-% the Berkeley cluster and not useful to the general public (and 
-% hence not available). This file exists because it's convenient for 
-% me to keep it in the repository.
-%
+function result = op_selective_search_boxes(first_el, last_el, imdb, im_width)
 % AUTORIGHTS
 % ---------------------------------------------------------
 % Copyright (c) 2014, Ross Girshick
@@ -30,7 +20,7 @@ for i = first_el:last_el
   fprintf('%d/%d (%s) ...', i, last_el, imdb.image_ids{i});
   im = imread(imdb.image_at(i));
   th = tic();
-  result{i_} = selective_search_boxes(im, fast_mode);
+  result{i_} = selective_search_boxes(im, fast_mode, im_width);
   t = toc(th);
 
   mean_num = (mean_num * (i_-1) + size(result{i_}, 1))/i_;

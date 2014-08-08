@@ -7,7 +7,7 @@ if ~exist('fast_mode', 'var') || isempty(fast_mode)
   fast_mode = true;
 end
 
-if ~exist('im_width', 'var') || isempty(im_width)
+if ~exist('im_width', 'var')
   im_width = [];
   scale = 1;
 else

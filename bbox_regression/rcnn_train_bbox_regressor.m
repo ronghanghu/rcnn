@@ -124,18 +124,24 @@ pool5 = 5;
 roidb = imdb.roidb_func(imdb);
 cls_counts = zeros(num_classes, 1);
 for i = 1:length(imdb.image_ids)
+  if imdb.is_blacklisted(i)
+    fprintf('skipping blacked listed image %d\n', i);
+    continue;
+  end
+
   tic_toc_print('%s: counting %d/%d\n', ...
                 procid(), i, length(imdb.image_ids));
 
   d = roidb.rois(i);
   [max_ov cls] = max(d.overlap, [], 2);
-  sel_ex = find(max_ov >= 0.5);
+  sel_ex = find(max_ov >= 0.6);
   cls = cls(sel_ex);
   for j = 1:length(sel_ex)
     cls_counts(cls(j)) = cls_counts(cls(j)) + 1;
   end
 end
 total = sum(cls_counts);
+fprintf('total = %d\n', total);
 feat_dim = size(rcnn_model.cnn.layers(pool5+1).weights{1},1);
 % features
 X = zeros(total, feat_dim, 'single');
@@ -148,6 +154,11 @@ C = zeros(total, 1, 'single');
 cur = 1;
 
 for i = 1:length(imdb.image_ids)
+  if imdb.is_blacklisted(i)
+    fprintf('skipping blacked listed image %d\n', i);
+    continue;
+  end
+
   tic_toc_print('%s: pos features %d/%d\n', ...
                 procid(), i, length(imdb.image_ids));
 
