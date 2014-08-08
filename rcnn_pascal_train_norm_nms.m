@@ -1,5 +1,5 @@
 function [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_train(imdb, roidb, varargin)
+    rcnn_pascal_train_norm_nms(imdb, roidb, varargin)
 % [rcnn_model, rcnn_k_fold_model] = rcnn_train(imdb, varargin)
 %   Trains an R-CNN detector for all classes in the imdb.
 %   
@@ -79,7 +79,7 @@ rcnn_model.classes = imdb.classes;
 
 % ------------------------------------------------------------------------
 % Get the average norm of the features
-opts.feat_norm_mean = rcnn_feature_stats(imdb, opts.layer, rcnn_model);
+opts.feat_norm_mean = rcnn_pascal_feature_stats(imdb, opts.layer, rcnn_model);
 fprintf('average norm = %.3f\n', opts.feat_norm_mean);
 rcnn_model.training_opts = opts;
 % ------------------------------------------------------------------------
