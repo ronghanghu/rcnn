@@ -1,5 +1,5 @@
 .nfs*
-feat_cache/*
+feat_cache
 *.mat
 bin/*
 selective_search/SelectiveSearchCodeIJCV
@@ -7,8 +7,10 @@ data/caffe_nets
 data/rcnn_models
 data/selective_search_data
 data/window_files
+datasets
+imdb/cache
 rcnn_config_local.m
-cachedir/*
+cachedir
 external/caffe
 *~
 imdb/data-splits/det_lists/split*
