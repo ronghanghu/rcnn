@@ -36,15 +36,17 @@ bg_overlap_min = spp_feat_cache_param.bg_overlap_min;
 extension = spp_feat_cache_param.extension;
 cache_dir = spp_feat_cache_param.cache_dir;
 
-load rcnn_model_spp.mat;
 roidb = imdb.roidb_func(imdb);
 if ~exist(cache_dir, 'dir')
   mkdir(cache_dir);
 end
 
+% fix seed for repeatability
+seed_rand();
+
 % initialize caffe
-caffe('init', net_proto_file, net_binary_file);
-caffe('set_phase_test');
+rcnn_model = rcnn_create_model(net_proto_file, net_binary_file);
+rcnn_model = rcnn_load_model(rcnn_model);
 
 fg_per_batch = round(batch_size * fg_fraction);
 bg_per_batch = batch_size - fg_per_batch;
@@ -63,7 +65,7 @@ for i = 1:length(imdb.image_ids)
   roi = roidb.rois(i);
   im = imread(img_path);
   % the roi.boxes are [x1 y1 x2 y2], 1-indexed
-  feat = spp_features(im, roi.boxes, rcnn_model_spp);
+  feat = spp_features(im, roi.boxes, rcnn_model);
   fprintf('[Extracting feature: %f]\n', toc(th1));
   
   % put features into fg cache and bg cache

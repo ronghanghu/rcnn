@@ -1,4 +1,4 @@
-function rcnn_make_window_file(imdb, out_dir, window_file_name, num_to_sample)
+function rcnn_ilsvrc_make_window_file(imdb, out_dir, window_file_name, num_to_sample)
 % rcnn_make_window_file(imdb, out_dir)
 %   Makes a window file that can be used by the caffe WindowDataLayer 
 %   for finetuning.
