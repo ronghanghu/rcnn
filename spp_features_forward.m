@@ -12,11 +12,13 @@ function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
 %     error('You probably need to call rcnn_load_model');
 % end
 
-% calculate the channel (BGR) mean from image mean
-image_mean = rcnn_model.cnn.image_mean;
-channel_mean = [mean2(image_mean(:,:,1)), ...
-  mean2(image_mean(:,:,2)), ...
-  mean2(image_mean(:,:,3))];
+if size(boxes, 1) == 0
+  feat = [];
+  return;
+end
+
+% get the channel (BGR) mean
+channel_mean = rcnn_model.cnn.channel_mean;
 
 % input size is the size of image used for network input
 input_size = max(fixed_sizes);

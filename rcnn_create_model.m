@@ -54,6 +54,10 @@ image_mean = ld.image_mean; clear ld;
 off = floor((size(image_mean,1) - cnn.input_size)/2)+1;
 image_mean = image_mean(off:off+cnn.input_size-1, off:off+cnn.input_size-1, :);
 cnn.image_mean = image_mean;
+% calculate the channel (BGR) mean from image mean
+cnn.channel_mean = [mean2(image_mean(:,:,1)), ...
+  mean2(image_mean(:,:,2)), ...
+  mean2(image_mean(:,:,3))];
 
 % init empty detectors
 detectors.W = [];
