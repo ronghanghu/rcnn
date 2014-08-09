@@ -7,7 +7,7 @@ data/caffe_nets
 data/rcnn_models
 data/selective_search_data
 data/window_files
-datasets
+datasets/*
 imdb/cache
 rcnn_config_local.m
 cachedir
