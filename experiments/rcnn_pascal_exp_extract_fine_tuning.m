@@ -3,6 +3,7 @@ function rcnn_pascal_exp_extract_fine_tuning()
 % -------------------- CONFIG --------------------
 net_proto_file = './model-defs/spp_output_pool5.prototxt';
 net_binary_file = './data/caffe_nets/spp_zf_iter_315000';
+cache_name   = 'v1_finetune_voc_2007_trainval_iter_70k';
 
 % SPPWindowDataLayer
 spp_feat_cache_param.feat_dim = 12800;
@@ -23,9 +24,9 @@ imdb_test = imdb_from_voc('datasets/VOCdevkit2007', 'test', '2007');
 % cache trainval
 spp_feat_cache_param.cache_dir = '/x/ronghang/voc2007/trainval';
 rcnn_pascal_make_spp_cache(imdb_trainval, ...
-    net_proto_file, net_binary_file, spp_feat_cache_param);
+    net_proto_file, net_binary_file, cache_name, spp_feat_cache_param);
 
 % cache test
 spp_feat_cache_param.cache_dir = '/x/ronghang/voc2007/test';
 rcnn_pascal_make_spp_cache(imdb_test, ...
-    net_proto_file, net_binary_file, spp_feat_cache_param);
+    net_proto_file, net_binary_file, cache_name, spp_feat_cache_param);
