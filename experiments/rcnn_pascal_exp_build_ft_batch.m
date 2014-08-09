@@ -1,4 +1,4 @@
-function rcnn_pascal_exp_extract_fine_tuning()
+function rcnn_pascal_exp_build_ft_batch()
 
 % -------------------- CONFIG --------------------
 net_proto_file = './model-defs/spp_output_pool5.prototxt';

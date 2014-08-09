@@ -1,5 +1,5 @@
 function rcnn_ilsvrc_make_spp_cache(imdb, net_proto_file, net_binary_file, ...
-    spp_feat_cache_param)
+    cache_name, spp_feat_cache_param)
 % rcnn_make_window_file(imdb, out_dir)
 %   Makes a window file that can be used by the caffe WindowDataLayer
 %   for finetuning.
@@ -61,11 +61,20 @@ for i = 1:length(imdb.image_ids)
   
   % extract features
   th1 = tic();
-  img_path = imdb.image_at(i);
+  save_file = ['./feat_cache/' cache_name '/' imdb.name '/' imdb.image_ids{i} '.mat'];
   roi = roidb.rois(i);
-  im = imread(img_path);
-  % the roi.boxes are [x1 y1 x2 y2], 1-indexed
-  feat = spp_features(im, roi.boxes, rcnn_model);
+  if exist(save_file, 'file')
+    fprintf('loading existing feature from mat file on feat cache\n');
+    d = load(save_file);
+    feat = d.feat;
+    assert(size(feat, 1) == size(roi.boxes, 1));
+  else
+    fprintf('extracting feature from image\n');
+    img_path = imdb.image_at(i);
+    im = imread(img_path);
+    % the roi.boxes are [x1 y1 x2 y2], 1-indexed
+    feat = spp_features(im, roi.boxes, rcnn_model);
+  end
   fprintf('[Extracting feature: %f]\n', toc(th1));
   
   % put features into fg cache and bg cache
