@@ -62,14 +62,15 @@ for i = 1:length(imdb.image_ids)
   % extract features
   th1 = tic();
   save_file = ['./feat_cache/' cache_name '/' imdb.name '/' imdb.image_ids{i} '.mat'];
+  roi = roidb.rois(i);
   if exist(save_file, 'file')
     fprintf('loading existing feature from mat file on feat cache\n');
     d = load(save_file);
     feat = d.feat;
+    assert(size(feat, 1) == size(roi.boxes, 1));
   else
     fprintf('extracting feature from image\n');
     img_path = imdb.image_at(i);
-    roi = roidb.rois(i);
     im = imread(img_path);
     % the roi.boxes are [x1 y1 x2 y2], 1-indexed
     feat = spp_features(im, roi.boxes, rcnn_model);
