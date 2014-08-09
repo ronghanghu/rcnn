@@ -7,14 +7,14 @@ function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
 %   boxes are in [x1 y1 x2 y2] format with one box per row
 %   rcnn_model specifies the CNN Caffe net file to use.
 
-% % make sure that caffe has been initialized for this model
-% if rcnn_model.cnn.init_key ~= caffe('get_init_key')
-%     error('You probably need to call rcnn_load_model');
-% end
-
 if size(boxes, 1) == 0
   feat = [];
   return;
+end
+
+% make sure that caffe has been initialized for this model
+if rcnn_model.cnn.init_key ~= caffe('get_init_key')
+  error('You probably need to call rcnn_load_model');
 end
 
 % get the channel (BGR) mean
