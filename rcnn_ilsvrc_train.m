@@ -1,5 +1,5 @@
 function [rcnn_model, rcnn_k_fold_model] = ...
-    rcnn_train(imdb, varargin)
+    rcnn_ilsvrc_train(imdb, varargin)
 % [rcnn_model, rcnn_k_fold_model] = rcnn_train(imdb, varargin)
 %   Trains an R-CNN detector for all classes in the imdb.
 %   
@@ -28,8 +28,6 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 
 % TODO:
 %  - allow training just a subset of classes
-
-error('deprecated');
 
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
@@ -111,7 +109,12 @@ for i = imdb.class_ids
     load(save_file);
     fprintf('Loaded saved positives for class %d\n', i);
   catch
-    inds_to_sample = subsample_images(imdb_train, opts.max_num_train_images, i);
+    % sequentially take the first max_num_train_images, instead of
+    % sub-sampling
+    inds = find(imdb.is_blacklisted == false);
+    num = min(length(inds), opts.max_num_train_images);
+    inds_to_sample = inds(1:num);
+    % inds_to_sample = subsample_images(imdb_train, opts.max_num_train_images, i);
     X_pos_train = get_positive_pool5_features(imdb_train, opts, inds_to_sample);
     save(save_file, 'X_pos_train', 'inds_to_sample', '-v7.3');
   end

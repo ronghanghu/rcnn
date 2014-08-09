@@ -69,7 +69,10 @@ switch chunk
   case 'train1'
     for i = 1:100
       imdb_train = imdb_from_ilsvrc13(devkit, ['train_pos_' num2str(i)]);
-      end_at = min(max_train_pos_num, size(imdb_train.image_ids, 1));
+      inds = find(imdb_train.is_blacklisted == false);
+      num = min(length(inds), max_train_pos_num);
+      inds_to_sample = inds(1:num);
+      end_at = inds_to_sample(end);
       rcnn_cache_pool5_features(imdb_train, ...
           'start', 1, 'end', end_at, ...
           'crop_mode', crop_mode, ...
@@ -80,7 +83,10 @@ switch chunk
   case 'train2'
     for i = 101:200
       imdb_train = imdb_from_ilsvrc13(devkit, ['train_pos_' num2str(i)]);
-      end_at = min(max_train_pos_num, size(imdb_train.image_ids, 1));
+      inds = find(imdb_train.is_blacklisted == false);
+      num = min(length(inds), max_train_pos_num);
+      inds_to_sample = inds(1:num);
+      end_at = inds_to_sample(end);
       rcnn_cache_pool5_features(imdb_train, ...
           'start', 1, 'end', end_at, ...
           'crop_mode', crop_mode, ...
