@@ -106,7 +106,7 @@ for i = 1:length(imdb.image_ids)
     % calculate the actual number of batches in this file
     actual_batch_num = ...
         min(floor(fg_num / fg_per_batch), floor(bg_num / bg_per_batch));
-    if i < length(imdb.image_ids)
+    if ~has_residue_at_end
       actual_batch_num = min(actual_batch_num, batch_per_file);
     end
     if actual_batch_num ~= batch_per_file
