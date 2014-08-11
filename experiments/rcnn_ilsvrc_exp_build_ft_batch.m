@@ -5,6 +5,7 @@ net_proto_file = './model-defs/spp_output_pool5.prototxt';
 net_binary_file = './data/caffe_nets/spp_zf_iter_315000';
 cache_name   = 'v1_finetune_val1+train1k_iter_50k';
 max_train_pos_num = 1000;
+split_num = 1000;
 
 % SPPWindowDataLayer
 spp_feat_cache_param.feat_dim = 12800;
@@ -18,7 +19,7 @@ spp_feat_cache_param.bg_overlap_min = 0.1;
 spp_feat_cache_param.extension = '.feat_cache';
 % ------------------------------------------------
 
-split_num = 1000;
+devkit = './datasets/ILSVRC13';
 
 % cache train1k_val1
 spp_feat_cache_param.cache_dir = '/x/ronghang/ilsvrc13/train1k_val1';
