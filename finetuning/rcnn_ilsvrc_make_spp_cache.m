@@ -45,6 +45,7 @@ assert(imdb_num == length(inds_to_sample_cell));
 roidb_cell = cell(size(imdb_cell));
 imdb_interval_cell = cell(size(imdb_cell));
 for n = 1:imdb_num
+  fprintf('loading roidb %d/%d\n', n, imdb_num);
   roidb_cell{n} = imdb_cell{n}.roidb_func(imdb_cell{n});
   image_num = length(inds_to_sample_cell{n});
   imdb_interval_cell{n} = round(linspace(0, image_num, split_num+1));
