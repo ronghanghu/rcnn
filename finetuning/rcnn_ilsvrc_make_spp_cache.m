@@ -76,7 +76,7 @@ for s = 1:split_num
     if ii_first > ii_last
       continue
     end
-    imdb = roidb_cell{n};
+    imdb = imdb_cell{n};
     roidb = roidb_cell{n};
     for ii = ii_first:ii_last
       fprintf('------------------------------------------------------------\n');
