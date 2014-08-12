@@ -111,7 +111,7 @@ for i = imdb.class_ids
   catch
     % sequentially take the first max_num_train_images, instead of
     % sub-sampling
-    inds = find(imdb.is_blacklisted == false);
+    inds = find(imdb_train.is_blacklisted == false);
     num = min(length(inds), opts.max_num_train_images);
     inds_to_sample = inds(1:num);
     % inds_to_sample = subsample_images(imdb_train, opts.max_num_train_images, i);
