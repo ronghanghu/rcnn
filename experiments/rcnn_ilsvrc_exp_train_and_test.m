@@ -9,14 +9,14 @@ function [res_test, res_train] = rcnn_ilsvrc_exp_train_and_test()
 %layer        = 6;
 %k_folds      = 0;
 
-%net_file     = '/data1/ILSVRC13/finetune_ilsvrc13_val1_iter_50000';
+%net_file     = './data1/ILSVRC13/finetune_ilsvrc13_val1_iter_50000';
 %cache_name   = 'v1_finetune_val1_iter_50k';
 %crop_mode    = 'warp';
 %crop_padding = 16;
 %layer        = 7;
 %k_folds      = 0;
 
-net_file     = '/data/caffe_nets/finetune_ilsvrc13_spp_zf_trainval_iter_600000_linked';
+net_file     = './data/caffe_nets/finetune_ilsvrc13_spp_zf_trainval_iter_600000_linked';
 cache_name   = 'v1_finetune_val1+train1k_iter_50k';
 crop_mode    = 'warp';
 crop_padding = 16;
