@@ -1,4 +1,4 @@
-function res = rcnn_test(rcnn_model, imdb, suffix)
+function res = rcnn_ilsvrc_test(rcnn_model, imdb, suffix)
 % res = rcnn_test(rcnn_model, imdb, suffix)
 %   Compute test results using the trained rcnn_model on the
 %   image database specified by imdb. Results are saved
