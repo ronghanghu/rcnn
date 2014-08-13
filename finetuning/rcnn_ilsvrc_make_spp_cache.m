@@ -81,11 +81,12 @@ for s = 1:split_num
     for ii = ii_first:ii_last
       fprintf('------------------------------------------------------------\n');
       fprintf('caching feature: split %d/%d\n\timdb %s %d/%d\n', s, ...
-        split_num, imdb.name, ii, length(inds_to_sample_cell{n}));
+          split_num, imdb.name, ii, length(inds_to_sample_cell{n}));
       i = inds_to_sample_cell{n}(ii);
       % extract features
       th1 = tic();
-      save_file = ['./feat_cache/' cache_name '/' imdb.name '/' imdb.image_ids{i} '.mat'];
+      save_file = ['./feat_cache/' cache_name '/' imdb.name '/' ...
+          imdb.image_ids{i} '.mat'];
       roi = roidb.rois(i);
       if exist(save_file, 'file')
         fprintf('loading existing feature from mat file on feat cache\n');
@@ -135,7 +136,8 @@ for s = 1:split_num
           actual_batch_num = min(actual_batch_num, batch_per_file);
         end
         if actual_batch_num ~= batch_per_file
-          fprintf('Notice: there are %d batches in this file\n', actual_batch_num);
+          fprintf('Notice: there are %d batches in this file\n', ...
+              actual_batch_num);
         end
         
         % subsample background windows
@@ -170,7 +172,8 @@ for s = 1:split_num
         % prune caches
         fg_cache = fg_cache((fg_per_batch * actual_batch_num+1):end, :);
         bg_cache = [];
-        fg_label_cache = fg_label_cache((fg_per_batch * actual_batch_num+1):end);
+        fg_label_cache = ...
+            fg_label_cache((fg_per_batch * actual_batch_num+1):end);
         file_id = file_id + 1;
         fprintf('[Saving feature: %f]\n', toc(th2));
       end

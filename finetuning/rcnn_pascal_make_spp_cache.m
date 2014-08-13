@@ -61,7 +61,8 @@ for i = 1:length(imdb.image_ids)
   
   % extract features
   th1 = tic();
-  save_file = ['./feat_cache/' cache_name '/' imdb.name '/' imdb.image_ids{i} '.mat'];
+  save_file = ['./feat_cache/' cache_name '/' imdb.name '/' ...
+      imdb.image_ids{i} '.mat'];
   roi = roidb.rois(i);
   if exist(save_file, 'file')
     fprintf('loading existing feature from mat file on feat cache\n');
