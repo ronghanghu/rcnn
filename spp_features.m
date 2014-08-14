@@ -8,18 +8,16 @@ conv5_stride = 16;
 max_proposal_num = 2500;
 % 5 Scale
 fixed_sizes = [640, 768, 917, 1152, 1600]';
-conv5_sizes = [ 38,  46,  56,   70,   98]'; % Zeiler & Fergus net
 % 1 Scale
 % fixed_sizes = [917]';
-% conv5_sizes = [ 56]'; % Zeiler & Fergus net
 
 feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
-    conv5_sizes, conv5_stride, max_proposal_num);
+    conv5_stride, max_proposal_num);
 
 end
 
 function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
-    conv5_sizes, conv5_stride, max_proposal_num)
+    conv5_stride, max_proposal_num)
 %   Compute Spatial Pyramid Pooling features on a set of boxes.
 %
 %   im is an image in RGB order as returned by imread
@@ -84,22 +82,12 @@ for scale = 1:scale_num
   % calculate the conv5 windows ([y1 x1 y2 x2], 0-indexed)
   conv5_windows = zeros(size(resized_boxes), 'single');
   
-  % Ronghang Mapping, 225x225 -> 15x15
+  % Mapping after padding
   conv5_windows(:, [1, 2]) = ...
-      round((resized_boxes(:, [1, 2]) - 16) / conv5_stride); % 112 -> 6
+      round(resized_boxes(:, [1, 2]) / conv5_stride);
   conv5_windows(:, [3, 4]) = ...
-      round((resized_boxes(:, [3, 4]) - 16) / conv5_stride);
-%   % Kaiming Mapping, 225x225 -> 13x13
-%   conv5_windows(:, [1, 2]) = ...
-%       round((resized_boxes(:, [1, 2]) -  0) / conv5_stride); %   0 ->  0
-%   conv5_windows(:, [3, 4]) = ...
-%       round((resized_boxes(:, [3, 4]) - 32) / conv5_stride); % 224 -> 12
+      round(resized_boxes(:, [3, 4]) / conv5_stride);
 
-  % make sure the windows have positive area: y2 >= y1 and x2 >= x1
-  conv5_windows(:, 3) = max(conv5_windows(:, 3), conv5_windows(:, 1));
-  conv5_windows(:, 4) = max(conv5_windows(:, 4), conv5_windows(:, 2));
-  % make sure the windows fit into the conv5 maps
-  conv5_windows = min(max(conv5_windows, 0), conv5_sizes(scale) - 1);
   % add 1 to the ends
   conv5_windows(:, [3, 4]) = conv5_windows(:, [3, 4]) + 1;
   % set width to be the fastest dimension

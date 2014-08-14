@@ -25,6 +25,7 @@ layers {
   weight_decay: 0
   convolution_param {
     num_output: 96
+    pad: 3
     kernel_size: 7
     stride: 2
     weight_filler {
@@ -50,6 +51,7 @@ layers {
   type: POOLING
   pooling_param {
     pool: MAX
+    pad: 1
     kernel_size: 3
     stride: 2
   }
@@ -65,6 +67,7 @@ layers {
   weight_decay: 0
   convolution_param {
     num_output: 256
+    pad: 2
     kernel_size: 5
     stride: 2
     weight_filler {
@@ -90,6 +93,7 @@ layers {
   type: POOLING
   pooling_param {
     pool: MAX
+    pad: 1
     kernel_size: 3
     stride: 2
   }
