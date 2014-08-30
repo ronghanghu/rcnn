@@ -32,6 +32,7 @@ function [rcnn_model, rcnn_k_fold_model] = ...
 ip = inputParser;
 ip.addRequired('imdb', @isstruct);
 ip.addParamValue('svm_C',           10^-3,  @isscalar);
+ip.addParamValue('max_num_neg',     50000,  @isscalar);
 ip.addParamValue('bias_mult',       10,     @isscalar);
 ip.addParamValue('pos_loss_weight', 2,      @isscalar);
 ip.addParamValue('k_folds',         2,      @isscalar);
@@ -229,6 +230,7 @@ end
 d.context = rcnn_scale_features(d.context, opts.context_norm_mean);
 
 neg_ovr_thresh = 0.3;
+neg_nms_thresh = 0.7;
 
 if first_time
   for cls_id = class_ids
@@ -250,6 +252,13 @@ else
       keep = setdiff(1:size(keys_,1), dups);
       I = I(keep);
     end
+
+    % Run NMS on negative windows. Keep samples with higher z (harder samples)
+    scored_boxes = [d.boxes(I, :), z(I)];
+    keep = nms(scored_boxes, neg_nms_thresh);
+    fprintf('keeping %d hard negatives out of %d after nms\n', ...
+        length(keep), length(I));
+    I = I(keep);
 
     % Unique hard negatives
     X_neg{cls_id} = d.context(I,:);
@@ -276,6 +285,12 @@ end
 if ~exist('neg_inds', 'var') || isempty(neg_inds)
   num_neg = size(cache.X_neg, 1);
   neg_inds = 1:num_neg;
+  if num_neg > opts.max_num_neg
+    num_neg = opts.max_num_neg;
+    neg_inds = randsample(neg_inds, opts.max_num_neg);
+    fprintf('[subset mode] using %d out of %d total negatives\n', ...
+      num_neg, size(cache.X_neg,1));
+  end
 else
   num_neg = length(neg_inds);
   fprintf('[subset mode] using %d out of %d total negatives\n', ...
@@ -369,7 +384,7 @@ cache.keys_neg = [];
 cache.keys_pos = keys_pos;
 cache.num_added = 0;
 cache.retrain_limit = 2000;
-cache.evict_thresh = -1.2;
+cache.evict_thresh = -1.1;
 cache.hard_thresh = -1.0001;
 cache.pos_loss = [];
 cache.neg_loss = [];
