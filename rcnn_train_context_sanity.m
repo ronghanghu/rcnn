@@ -89,6 +89,7 @@ try
   load(save_file);
   fprintf('Loaded saved positives from ground truth boxes\n');
 catch
+  [X_pos, keys_pos] = get_positive_pool5_features(imdb, opts);
 % Do NOT save files
 %   save(save_file, 'X_pos', 'keys_pos', '-v7.3');
 end
