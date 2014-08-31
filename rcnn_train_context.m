@@ -75,7 +75,7 @@ rcnn_model.classes = imdb.classes;
 
 % ------------------------------------------------------------------------
 % Get the average norm of the features
-opts.feat_norm_mean = rcnn_feature_stats(imdb, opts.layer, rcnn_model);
+opts.feat_norm_mean = rcnn_pascal_feature_stats(imdb, opts.layer, rcnn_model);
 fprintf('average feature norm = %.3f\n', opts.feat_norm_mean);
 % Get the average norm of the context
 opts.context_norm_mean = rcnn_context_stats(imdb, rcnn_model);
