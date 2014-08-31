@@ -1,4 +1,9 @@
 function feat = spp_features(im, boxes, rcnn_model)
+%   Compute Spatial Pyramid Pooling features on a set of boxes.
+%
+%   im is an image in RGB order as returned by imread
+%   boxes are in [x1 y1 x2 y2] format with one box per row
+%   rcnn_model specifies the CNN Caffe net file to use.
 
 % PARAMETER OF THE NETWORK
 % TODO: move these parameters into rcnn_model
@@ -11,6 +16,7 @@ fixed_sizes = [640, 768, 917, 1152, 1600]';
 % 1 Scale
 % fixed_sizes = [917]';
 
+check_im_boxes(im, boxes);
 feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
     conv5_stride, max_proposal_num);
 
@@ -18,11 +24,7 @@ end
 
 function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
     conv5_stride, max_proposal_num)
-%   Compute Spatial Pyramid Pooling features on a set of boxes.
-%
-%   im is an image in RGB order as returned by imread
-%   boxes are in [x1 y1 x2 y2] format with one box per row
-%   rcnn_model specifies the CNN Caffe net file to use.
+% extract SPP features
 
 if size(boxes, 1) == 0
   feat = [];
@@ -112,5 +114,21 @@ for start_id = 1:max_proposal_num:proposal_num
   feat = cat(1, feat, squeeze(caffe_output{1})');
 end
 feat = feat(1:proposal_num, :);
+
+end
+
+function check_im_boxes(im, boxes)
+% check whether the image and the boxes are valid
+
+[h, w, c] = size(im);
+% check whether the image has 3 channels
+assert(c == 3);
+
+% check whether all boxes fit into image region
+% boxes are in [x1 y1 x2 y2], 1-indexed format with one box per row
+assert(all(boxes(:, 1) >= 1));
+assert(all(boxes(:, 2) >= 1));
+assert(all(boxes(:, 3) <= w));
+assert(all(boxes(:, 4) <= h));
 
 end
