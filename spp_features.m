@@ -10,7 +10,7 @@ function feat = spp_features(im, boxes, rcnn_model)
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
 conv5_stride = 16;
-max_proposal_num = 2500;
+max_proposal_num = 10000;
 % 5 Scale
 fixed_sizes = [640, 768, 917, 1152, 1600]';
 % 1 Scale

@@ -6,13 +6,13 @@ input_dim: 1600
 input: "conv5_windows"
 input_dim: 1
 input_dim: 1
-input_dim: 2500
+input_dim: 10000
 input_dim: 4
 input: "conv5_scales"
 input_dim: 1
 input_dim: 1
 input_dim: 1
-input_dim: 2500
+input_dim: 10000
 
 layers {
   bottom: "data"
