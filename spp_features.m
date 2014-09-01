@@ -16,6 +16,11 @@ fixed_sizes = [640, 768, 917, 1152, 1600]';
 % 1 Scale
 % fixed_sizes = [917]';
 
+% add padding to boxes
+crop_padding = 0;
+boxes = enlarge_boxes(boxes, crop_padding);
+
+% extract features
 feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
     conv5_stride, max_proposal_num);
 
@@ -113,6 +118,15 @@ for start_id = 1:max_proposal_num:proposal_num
   feat = cat(1, feat, squeeze(caffe_output{1})');
 end
 feat = feat(1:proposal_num, :);
+
+end
+
+function boxes = enlarge_boxes(boxes, crop_padding)
+% enlarge the boxes with crop_padding
+% boxes are allowed to expand outside image region
+
+boxes(:, [1 2]) = boxes(:, [1 2]) - crop_padding;
+boxes(:, [3 4]) = boxes(:, [3 4]) + crop_padding;
 
 end
 
