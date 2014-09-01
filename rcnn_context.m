@@ -29,11 +29,13 @@ end
 box_whole_image = [1 1 w h];
 multiscale_boxes = cat(1, multiscale_boxes, box_whole_image);
 
-% make sure the boxes fit into the image region
-multiscale_boxes(:, 1) = max(1, multiscale_boxes(:, 1));
-multiscale_boxes(:, 2) = max(1, multiscale_boxes(:, 2));
-multiscale_boxes(:, 3) = min(w, multiscale_boxes(:, 3));
-multiscale_boxes(:, 4) = min(h, multiscale_boxes(:, 4));
+% remove these constrains and allow boxes to expand outside image region
+% percise localization of box center is more important
+% % make sure the boxes fit into the image region
+% multiscale_boxes(:, 1) = max(1, multiscale_boxes(:, 1));
+% multiscale_boxes(:, 2) = max(1, multiscale_boxes(:, 2));
+% multiscale_boxes(:, 3) = min(w, multiscale_boxes(:, 3));
+% multiscale_boxes(:, 4) = min(h, multiscale_boxes(:, 4));
 
 % use spp_features to extract context features
 raw_context = spp_features(im, multiscale_boxes, context_model);
