@@ -2,12 +2,11 @@ function [res_test, res_train] = rcnn_pascal_exp_train_nms_and_test()
 % Runs an experiment that trains an R-CNN model and tests it.
 
 % -------------------- CONFIG --------------------
-net_file     = './data/caffe_nets/finetune_voc_2007_spp_zf_trainval_iter_300000_linked';
-% net_file     = './data/caffe_nets/spp_zf_iter_315000';
-cache_name   = 'v1_finetune_voc_2007_trainval_iter_70k';
+net_file     = './data/caffe_nets/spp_zf_iter_315000';
+cache_name   = 'spp_multisize';
 crop_mode    = 'warp';
 crop_padding = 16;
-layer        = 7;
+layer        = 5;
 k_folds      = 0;
 
 % change to point to your VOCdevkit install

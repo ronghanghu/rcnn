@@ -2,7 +2,7 @@ function rcnn_pascal_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
 net_file     = './data/caffe_nets/spp_zf_iter_315000';
-cache_name   = 'v1_finetune_voc_2007_trainval_iter_70k';
+cache_name   = 'spp_multisize';
 crop_mode    = 'warp';
 crop_padding = 16;
 
