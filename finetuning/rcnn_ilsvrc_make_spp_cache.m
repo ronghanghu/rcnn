@@ -36,6 +36,7 @@ bg_overlap_max = spp_feat_cache_param.bg_overlap_max;
 bg_overlap_min = spp_feat_cache_param.bg_overlap_min;
 extension = spp_feat_cache_param.extension;
 cache_dir = spp_feat_cache_param.cache_dir;
+feat_dim_inds = spp_feat_cache_param.feat_dim_inds;
 
 % load roidb for each imdb and
 % calculate how many images in each imdb to be put into batches each time
@@ -92,8 +93,6 @@ for s = 1:split_num
         fprintf('loading existing feature from mat file on feat cache\n');
         d = load(save_file);
         feat = d.feat;
-        assert(size(feat, 1) == size(roi.boxes, 1));
-        assert(size(feat, 2) == feat_dim);
       else
         fprintf('extracting feature from image\n');
         img_path = imdb.image_at(i);
@@ -101,6 +100,9 @@ for s = 1:split_num
         % the roi.boxes are [x1 y1 x2 y2], 1-indexed
         feat = multisize_spp_features(im, roi.boxes, rcnn_model);
       end
+      feat = feat(:, feat_dim_inds);
+      assert(size(feat, 1) == size(roi.boxes, 1));
+      assert(size(feat, 2) == feat_dim);
       fprintf('[Extracting feature: %f]\n', toc(th1));
       
       % put features into fg cache and bg cache

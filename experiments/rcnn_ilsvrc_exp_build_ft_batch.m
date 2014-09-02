@@ -1,5 +1,7 @@
 function rcnn_ilsvrc_exp_build_ft_batch()
 
+error('this function is out of date. it needs to be modified according to corresponding pascal version');
+
 % -------------------- CONFIG --------------------
 net_proto_file = './model-defs/spp_output_pool5.prototxt';
 net_binary_file = './data/caffe_nets/spp_zf_iter_315000';
@@ -8,7 +10,7 @@ max_train_pos_num = 1000;
 split_num = 1000;
 
 % SPPWindowDataLayer
-spp_feat_cache_param.feat_dim = 38400;
+spp_feat_cache_param.feat_dim = 12800;
 spp_feat_cache_param.batch_per_file = 20;
 spp_feat_cache_param.batch_size = 128;
 spp_feat_cache_param.fg_fraction = 0.25;
