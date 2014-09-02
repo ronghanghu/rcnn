@@ -75,7 +75,7 @@ for i = 1:length(imdb.image_ids)
     img_path = imdb.image_at(i);
     im = imread(img_path);
     % the roi.boxes are [x1 y1 x2 y2], 1-indexed
-    feat = spp_features(im, roi.boxes, rcnn_model);
+    feat = multisize_spp_features(im, roi.boxes, rcnn_model);
   end
   fprintf('[Extracting feature: %f]\n', toc(th1));
   
