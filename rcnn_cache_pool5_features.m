@@ -90,7 +90,7 @@ for i = opts.start:opts.end
   end
 
   th = tic;
-  d.feat = spp_features(im, d.boxes, rcnn_model);
+  d.feat = spp_multisize_features(im, d.boxes, rcnn_model);
   fprintf(' [features: %.3fs]\n', toc(th));
 
   th = tic;

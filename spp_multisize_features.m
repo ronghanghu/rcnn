@@ -1,4 +1,4 @@
-function feat = spp_multiscale_features(im, boxes, rcnn_model)
+function feat = spp_multisize_features(im, boxes, rcnn_model)
 %   Compute Spatial Pyramid Pooling features on a set of boxes.
 %
 %   im is an image in RGB order as returned by imread
