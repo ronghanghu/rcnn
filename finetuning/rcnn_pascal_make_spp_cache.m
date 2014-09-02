@@ -69,6 +69,7 @@ for i = 1:length(imdb.image_ids)
     d = load(save_file);
     feat = d.feat;
     assert(size(feat, 1) == size(roi.boxes, 1));
+    assert(size(feat, 2) == feat_dim);
   else
     fprintf('extracting feature from image\n');
     img_path = imdb.image_at(i);
