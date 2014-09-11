@@ -1,8 +1,8 @@
 function rcnn_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
-net_file     = './data/caffe_nets/finetune_voc_2007_trainval_iter_70k';
-cache_name   = 'v1_finetune_voc_2007_trainval_iter_70k';
+net_file     = './data/caffe_nets/pascal_cccp_rcnn_iter_60000';
+cache_name   = 'cccp_rcnn';
 crop_mode    = 'warp';
 crop_padding = 16;
 
