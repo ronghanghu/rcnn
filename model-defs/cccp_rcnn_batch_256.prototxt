@@ -1,42 +1,8 @@
-name: "CaffeNet"
-layers {
-  name: "data"
-  type: WINDOW_DATA
-  top: "data"
-  top: "label"
-  window_data_param {
-    source: "window_file_voc_2007_trainval.txt"
-    mean_file: "../../data/ilsvrc12/imagenet_mean.binaryproto"
-    batch_size: 128
-    crop_size: 227
-    mirror: true
-    fg_threshold: 0.5
-    bg_threshold: 0.5
-    fg_fraction: 0.25
-    context_pad: 16
-    crop_mode: "warp"
-  }
-  include: { phase: TRAIN }
-}
-layers {
-  name: "data"
-  type: WINDOW_DATA
-  top: "data"
-  top: "label"
-  window_data_param {
-    source: "window_file_voc_2007_test.txt"
-    mean_file: "../../data/ilsvrc12/imagenet_mean.binaryproto"
-    batch_size: 128
-    crop_size: 227
-    mirror: true
-    fg_threshold: 0.5
-    bg_threshold: 0.5
-    fg_fraction: 0.25
-    context_pad: 16
-    crop_mode: "warp"
-  }
-  include: { phase: TEST }
-}
+input: "data"
+input_dim: 256
+input_dim: 3
+input_dim: 227
+input_dim: 227
 layers {
   bottom: "data"
   top: "conv1"
@@ -436,19 +402,4 @@ layers {
     kernel_size: 6
     stride: 1
   }
-}
-layers {
-  name: "accuracy"
-  type: ACCURACY
-  bottom: "pool4"
-  bottom: "label"
-  top: "accuracy"
-  include: { phase: TEST }
-}
-layers {
-  name: "loss"
-  type: SOFTMAX_LOSS
-  bottom: "pool4"
-  bottom: "label"
-  top: "loss"
 }
