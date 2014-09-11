@@ -65,9 +65,9 @@ catch
       if isempty(d.feat)
         continue;
       end
-      d.feat = rcnn_pool5_to_fcX(d.feat, feat_opts.layer, rcnn_model);
-      d.feat = rcnn_scale_features(d.feat, feat_opts.feat_norm_mean);
-      zs = bsxfun(@plus, d.feat*rcnn_model.detectors(f).W, rcnn_model.detectors(f).B);
+      fg_score = d.feat(:, 2:end);
+      bg_score = d.feat(:, 1);
+      zs = bsxfun(@minus, fg_score, bg_score);
 
       for j = 1:num_classes
         boxes = d.boxes;
