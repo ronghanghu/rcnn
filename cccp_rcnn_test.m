@@ -1,4 +1,4 @@
-function res = cccp_rcnn_test(rcnn_model, imdb, suffix)
+function res = cccp_rcnn_test(cache_name, imdb, suffix)
 % res = rcnn_test(rcnn_model, imdb, suffix)
 %   Compute test results using the trained rcnn_model on the
 %   image database specified by imdb. Results are saved
@@ -13,6 +13,9 @@ function res = cccp_rcnn_test(rcnn_model, imdb, suffix)
 % LICENSE. Please retain this notice and LICENSE if you use 
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
+
+rcnn_model.classes = imdb.classes;
+rcnn_model.training_opts.cache_name = cache_name;
 
 conf = rcnn_config('sub_dir', imdb.name);
 image_ids = imdb.image_ids;
