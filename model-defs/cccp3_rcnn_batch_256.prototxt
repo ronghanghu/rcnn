@@ -1,4 +1,4 @@
-input: "data"
+name: "CaffeNet"
 input_dim: 256
 input_dim: 3
 input_dim: 227
@@ -37,13 +37,15 @@ layers {
   bottom: "conv1"
   top: "cccp1"
   name: "cccp1"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 96
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -65,13 +67,15 @@ layers {
   bottom: "cccp1"
   top: "cccp2"
   name: "cccp2"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 96
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -91,8 +95,8 @@ layers {
 }
 layers {
   bottom: "cccp2"
-  top: "pool0"
-  name: "pool0"
+  top: "pool1"
+  name: "pool1"
   type: POOLING
   pooling_param {
     pool: MAX
@@ -101,7 +105,7 @@ layers {
   }
 }
 layers {
-  bottom: "pool0"
+  bottom: "pool1"
   top: "conv2"
   name: "conv2"
   type: CONVOLUTION
@@ -135,13 +139,15 @@ layers {
   bottom: "conv2"
   top: "cccp3"
   name: "cccp3"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 256
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -163,13 +169,15 @@ layers {
   bottom: "cccp3"
   top: "cccp4"
   name: "cccp4"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 256
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -233,13 +241,15 @@ layers {
   bottom: "conv3"
   top: "cccp5"
   name: "cccp5"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 384
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -261,13 +271,15 @@ layers {
   bottom: "cccp5"
   top: "cccp6"
   name: "cccp6"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 384
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -293,7 +305,7 @@ layers {
   pooling_param {
     pool: MAX
     kernel_size: 3
-    stride: 2
+    stride: 1
   }
 }
 layers {
@@ -308,7 +320,7 @@ layers {
 layers {
   bottom: "pool3"
   top: "conv4"
-  name: "conv4-1024"
+  name: "conv4-1024-large"
   type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
@@ -316,8 +328,8 @@ layers {
   weight_decay: 0
   convolution_param {
     num_output: 1024
-    pad: 1
-    kernel_size: 3
+    pad: 2
+    kernel_size: 5
     stride: 1
     weight_filler {
       type: "gaussian"
@@ -340,13 +352,15 @@ layers {
   bottom: "conv4"
   top: "cccp7"
   name: "cccp7-1024"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 1
   blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 1024
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -368,13 +382,15 @@ layers {
   bottom: "cccp7"
   top: "cccp8"
   name: "cccp8-pascal"
-  type: CCCP
+  type: CONVOLUTION
   blobs_lr: 10
   blobs_lr: 20
   weight_decay: 1
   weight_decay: 0
-  cccp_param {
+  convolution_param {
     num_output: 21
+    kernel_size: 1
+    stride: 1
     weight_filler {
       type: "gaussian"
       mean: 0
@@ -399,7 +415,7 @@ layers {
   type: POOLING
   pooling_param {
     pool: AVE
-    kernel_size: 6
+    kernel_size: 11
     stride: 1
   }
 }
