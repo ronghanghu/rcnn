@@ -1,4 +1,5 @@
 name: "CaffeNet"
+input: "data"
 input_dim: 256
 input_dim: 3
 input_dim: 227
