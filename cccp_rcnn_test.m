@@ -30,6 +30,12 @@ else
   suffix = ['_' suffix];
 end
 
+% Record a log of the training and test procedure
+timestamp = datestr(datevec(now()), 'dd.mmm.yyyy:HH.MM.SS');
+diary_file = [conf.cache_dir 'rcnn_train_' timestamp '.txt'];
+diary(diary_file);
+fprintf('Logging output in %s\n', diary_file);
+
 try
   aboxes = cell(num_classes, 1);
   for i = 1:num_classes
