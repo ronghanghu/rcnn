@@ -2,7 +2,7 @@ function rcnn_exp_cache_features(chunk)
 
 % -------------------- CONFIG --------------------
 net_file     = './data/caffe_nets/pascal_cccp3_rcnn_iter_70000.caffemodel';
-cache_name   = 'cccp_rcnn3';
+cache_name   = 'cccp3_rcnn';
 crop_mode    = 'warp';
 crop_padding = 16;
 
