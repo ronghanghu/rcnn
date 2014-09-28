@@ -55,6 +55,11 @@ rcnn_model = rcnn_create_model('./model-defs/cccp3_rcnn_batch_256.prototxt', './
 rcnn_model = rcnn_load_model(rcnn_model, use_gpu);
 fprintf('done\n');
 
+% load classes
+VOCdevkit = './datasets/VOCdevkit2007';
+VOCopts = get_voc_opts(VOCdevkit);
+rcnn_model.classes = VOCopts.classes;
+
 th = tic;
 dets = rcnn_detect(im, rcnn_model, thresh);
 fprintf('Total %d-class detection time: %.3fs\n', ...

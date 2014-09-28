@@ -32,11 +32,6 @@ fg_score = feat(:, 2:end);
 bg_score = feat(:, 1);
 scores = bsxfun(@minus, fg_score, bg_score);
 fprintf('done (in %.3fs)\n', toc(th));
-
-% load classes
-VOCdevkit = './datasets/VOCdevkit2007';
-VOCopts = get_voc_opts(VOCdevkit);
-rcnn_model.classes = VOCopts.classes;
   
 % apply NMS to each class and return final scored detections
 fprintf('Applying NMS...');
