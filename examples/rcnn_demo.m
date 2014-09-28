@@ -26,18 +26,13 @@ end
 switch demo_choice
   case 'PASCAL'
     % Example using the PASCAL VOC 2007 fine-tuned detectors (20 classes)
-    rcnn_model_file = './data/rcnn_models/voc_2012/rcnn_model_finetuned.mat';
     im = imread('./examples/images/000084.jpg');
   case 'ILSVRC13'
     % Example using the ILSVRC13 fine-tuned detectors (200 classes)
-    rcnn_model_file = './data/rcnn_models/ilsvrc2013/rcnn_model.mat';
+    error('not implemented');
     im = imread('./examples/images/fish-bike.jpg');
   otherwise
     error('unknown demo ''%s'' [valid options: ''PASCAL'' or ''ILSVRC13'']', demo_choice);
-end
-
-if ~exist(rcnn_model_file, 'file')
-  error('You need to download the R-CNN precomputed models. See README.md for details.');
 end
 
 if ~exist('use_gpu', 'var') || isempty(use_gpu)
@@ -56,7 +51,8 @@ pause;
 % Initialization only needs to happen once (so this time isn't counted
 % when timing detection).
 fprintf('Initializing R-CNN model (this might take a little while)\n');
-rcnn_model = rcnn_load_model(rcnn_model_file, use_gpu);
+rcnn_model = rcnn_create_model('./model-defs/cccp3_rcnn_batch_256.prototxt', './data/caffe_nets/pascal_cccp_rcnn_iter_70000.caffemodel');
+rcnn_model = rcnn_load_model(rcnn_model, use_gpu);
 fprintf('done\n');
 
 th = tic;

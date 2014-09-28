@@ -23,13 +23,14 @@ fprintf('found %d candidates (in %.3fs).\n', size(boxes,1), toc(th));
 fprintf('Extracting CNN features from regions...');
 th = tic();
 feat = rcnn_features(im, boxes, rcnn_model);
-feat = rcnn_scale_features(feat, rcnn_model.training_opts.feat_norm_mean);
 fprintf('done (in %.3fs).\n', toc(th));
 
 % compute scores for each candidate [num_boxes x num_classes]
 fprintf('Scoring regions with detectors...');
 th = tic();
-scores = bsxfun(@plus, feat*rcnn_model.detectors.W, rcnn_model.detectors.B);
+fg_score = feat(:, 2:end);
+bg_score = feat(:, 1);
+scores = bsxfun(@minus, fg_score, bg_score);
 fprintf('done (in %.3fs)\n', toc(th));
 
 % apply NMS to each class and return final scored detections
