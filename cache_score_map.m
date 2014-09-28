@@ -10,9 +10,9 @@ function score_map = cache_score_map(im, rcnn_model)
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
 % 5 Scale
-% fixed_sizes = [640, 768, 917, 1152, 1600]';
+fixed_sizes = [640, 768, 917, 1152, 1600]';
 % 1 Scale
-fixed_sizes = [917]';
+% fixed_sizes = [917]';
 
 % extract features
 score_map = spp_features_forward(im, rcnn_model, fixed_sizes);
@@ -67,10 +67,10 @@ end
 % features
 % split the windows into batches when window_num exceeds max_window_num
 score_map = caffe('forward', {multiscale_image_data});
-score_map = squeeze(score_map{1});
-fg_score = score_map(:,:,2:end);
-bg_score = score_map(:,:,1);
+score_map = score_map{1};
+fg_score = score_map(:,:,2:end,:);
+bg_score = score_map(:,:,1,:);
 score_map = bsxfun(@minus, fg_score, bg_score);
-score_map = permute(score_map, [2, 1, 3]);
+score_map = permute(score_map, [2, 1, 3, 4]);
 
 end
