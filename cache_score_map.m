@@ -9,27 +9,18 @@ function score_map = cache_score_map(im, rcnn_model)
 % TODO: move these parameters into rcnn_model
 % NOTE: if you change any of these parameters, you must also change the
 % corresponding network prototext file
-conv5_stride = 16;
-max_proposal_num = 2500;
 % 5 Scale
-fixed_sizes = [640, 768, 917, 1152, 1600]';
+% fixed_sizes = [640, 768, 917, 1152, 1600]';
 % 1 Scale
-% fixed_sizes = [917]';
+fixed_sizes = [917]';
 
 % extract features
-feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
-    conv5_stride, max_proposal_num);
+score_map = spp_features_forward(im, rcnn_model, fixed_sizes);
 
 end
 
-function feat = spp_features_forward(im, boxes, rcnn_model, fixed_sizes, ...
-    conv5_stride, max_proposal_num)
+function score_map = spp_features_forward(im, rcnn_model, fixed_sizes)
 % extract SPP features
-
-if size(boxes, 1) == 0
-  feat = [];
-  return;
-end
 
 % make sure that caffe has been initialized for this model
 if rcnn_model.cnn.init_key ~= caffe('get_init_key')
@@ -45,7 +36,6 @@ channel_mean = [mean2(image_mean(:,:,1)), ...
 % input size is the size of image used for network input
 input_size = max(fixed_sizes);
 scale_num = size(fixed_sizes, 1);
-proposal_num = size(boxes, 1);
 
 % calculate zooming factor
 [image_h, image_w, ~] = size(im);
@@ -53,10 +43,6 @@ image_l = max(image_h, image_w);
 zoom_factors = fixed_sizes / image_l;
 fixed_hs = round(min(image_h * zoom_factors, fixed_sizes));
 fixed_ws = round(min(image_w * zoom_factors, fixed_sizes));
-
-% match the boxes onto optimal scale, on which the mapped boxes is
-% closest to 224*224
-desired_area = 224*224;
 
 % calculate the multiscale image data and conv5 windows
 multiscale_image_data = zeros(input_size, input_size, 3, scale_num, 'single');
@@ -81,7 +67,10 @@ end
 % features
 % split the windows into batches when window_num exceeds max_window_num
 score_map = caffe('forward', {multiscale_image_data});
-score_map = score_map{1};
+score_map = squeeze(score_map{1});
+fg_score = score_map(:,:,2:end);
+bg_score = score_map(:,:,1);
+score_map = bsxfun(@minus, fg_score, bg_score);
 score_map = permute(score_map, [2, 1, 3]);
 
 end
