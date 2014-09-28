@@ -17,7 +17,7 @@ function rcnn_demo(demo_choice, use_gpu)
 
 clf;
 
-thresh = -1;
+thresh = 1;
 
 if ~exist('demo_choice', 'var') || isempty(demo_choice)
   demo_choice = 'PASCAL';
@@ -51,7 +51,9 @@ pause;
 % Initialization only needs to happen once (so this time isn't counted
 % when timing detection).
 fprintf('Initializing R-CNN model (this might take a little while)\n');
-rcnn_model = rcnn_create_model('./model-defs/cccp3_rcnn_batch_256.prototxt', './data/caffe_nets/pascal_cccp_rcnn_iter_70000.caffemodel');
+rcnn_model = ...
+    rcnn_create_model('./model-defs/cccp3_rcnn_batch_256.prototxt', ...
+    './data/caffe_nets/pascal_cccp3_rcnn_iter_70000.caffemodel');
 rcnn_model = rcnn_load_model(rcnn_model, use_gpu);
 fprintf('done\n');
 
