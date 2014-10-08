@@ -34,7 +34,7 @@ bottom_scale = single(scale - 1); % convert 1-indexed scale to 0-indexed scale
 
 % calculate the multiscale image data and conv5 windows
 bottom_data = zeros(input_size, input_size, 3, scale_num, 'single');
-bottom_box = zeros(4, proposal_num, 'single');
+bottom_box = zeros(4, max_proposal_num, 'single');
 for scale = 1:scale_num
   % resize the image to a fixed scale, turn off antialiasing to make it
   % similar to imresize in OpenCV
@@ -63,9 +63,9 @@ end
 
 % in testing, just set all labels to be zero (background)
 bottom_window_num = single([proposal_num, 0, proposal_num]');
+bottom_scale = cat(1, bottom_scale, ...
+    zeros(max_proposal_num - proposal_num, 1, 'single'));
 bottom_label = zeros(max_proposal_num, 1, 'single');
-
-keyboard;
 
 bottom = ...
     {bottom_data; bottom_window_num; bottom_box; bottom_scale; bottom_label};
@@ -74,8 +74,7 @@ bottom = ...
 top = caffe('forward', bottom);
 
 % get results
-feat = top{2};
-
-keyboard;
+feat = permute(squeeze(top{2}), [2, 1]);
+feat = feat(1:proposal_num, :);
 
 end

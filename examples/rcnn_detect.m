@@ -22,7 +22,7 @@ fprintf('found %d candidates (in %.3fs).\n', size(boxes,1), toc(th));
 % extract features from candidates (one row per candidate box)
 fprintf('Extracting CNN features from regions...');
 th = tic();
-feat = rcnn_features(im, boxes, rcnn_model);
+feat = proposal_features(im, boxes, rcnn_model);
 fprintf('done (in %.3fs).\n', toc(th));
 
 % compute scores for each candidate [num_boxes x num_classes]
