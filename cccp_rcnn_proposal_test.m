@@ -1,4 +1,4 @@
-function res = cccp_rcnn_test(cache_name, imdb, suffix)
+function res = cccp_rcnn_proposal_test(cache_name, imdb, suffix)
 % res = rcnn_test(rcnn_model, imdb, suffix)
 %   Compute test results using the trained rcnn_model on the
 %   image database specified by imdb. Results are saved

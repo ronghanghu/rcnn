@@ -5,7 +5,7 @@ function [res_test, res_train] = rcnn_exp_test_cccp_rcnn()
 VOCdevkit = './datasets/VOCdevkit2007';
 % ------------------------------------------------
 
-cache_name = 'cccp3_rcnn';
+cache_name = 'cccp3_proposal';
 
 imdb_train = imdb_from_voc(VOCdevkit, 'trainval', '2007');
 imdb_test = imdb_from_voc(VOCdevkit, 'test', '2007');

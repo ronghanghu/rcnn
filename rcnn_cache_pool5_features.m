@@ -38,7 +38,7 @@ ip.addOptional('cache_name', ...
 
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
-opts.net_def_file = './model-defs/cccp3_rcnn_batch_256.prototxt';
+opts.net_def_file = './model-defs/cccp3_proposal_4_scale.prototxt';
 
 image_ids = imdb.image_ids;
 if opts.end == 0
@@ -86,7 +86,7 @@ for i = opts.start:opts.end
   im = imread(imdb.image_at(i));
 
   th = tic;
-  d.feat = rcnn_features(im, d.boxes, rcnn_model);
+  d.feat = proposal_features(im, d.boxes, rcnn_model);
   fprintf(' [features: %.3fs]\n', toc(th));
 
   th = tic;

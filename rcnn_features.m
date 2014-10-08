@@ -16,6 +16,8 @@ function feat = rcnn_features(im, boxes, rcnn_model)
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
+error('this function is deprecated');
+
 % make sure that caffe has been initialized for this model
 if rcnn_model.cnn.init_key ~= caffe('get_init_key')
   error('You probably need to call rcnn_load_model');
