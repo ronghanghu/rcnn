@@ -449,6 +449,7 @@ layers {
   bottom: "scale"
   bottom: "label"
   top: "loss"
+  top: "score"
   name: "dense-window-loss"
   type: DENSE_WINDOW_LOSS
   dense_window_loss_param {
