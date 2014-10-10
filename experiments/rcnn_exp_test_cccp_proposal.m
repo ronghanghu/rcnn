@@ -10,5 +10,5 @@ cache_name = 'cccp3_proposal';
 imdb_train = imdb_from_voc(VOCdevkit, 'trainval', '2007');
 imdb_test = imdb_from_voc(VOCdevkit, 'test', '2007');
 
-% res_train = cccp_rcnn_proposal_test(cache_name, imdb_train);
+res_train = cccp_rcnn_proposal_test(cache_name, imdb_train);
 res_test = cccp_rcnn_proposal_test(cache_name, imdb_test);

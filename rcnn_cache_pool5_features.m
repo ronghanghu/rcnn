@@ -38,7 +38,7 @@ ip.addOptional('cache_name', ...
 
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
-opts.net_def_file = './model-defs/cccp3_proposal_4_scale.prototxt';
+opts.net_def_file = './model-defs/cccp3_proposal_5_scale.prototxt';
 
 image_ids = imdb.image_ids;
 if opts.end == 0

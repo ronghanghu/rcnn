@@ -411,8 +411,8 @@ layers {
   top: "cccp8"
   name: "cccp8-pascal"
   type: CONVOLUTION
-  blobs_lr: 10
-  blobs_lr: 20
+  blobs_lr: 1
+  blobs_lr: 2
   weight_decay: 1
   weight_decay: 0
   convolution_param {
@@ -449,14 +449,13 @@ layers {
   bottom: "scale"
   bottom: "label"
   top: "loss"
-  top: "score"
   name: "dense-window-loss"
   type: DENSE_WINDOW_LOSS
   dense_window_loss_param {
     fg_loss_weight: 1
-    bg_loss_weight: 3
+    bg_loss_weight: 1
     stride: 16
-    show_results: true
+    show_results: false
+    output_prob: false
   }
-  loss_weight: 0.1
 }
