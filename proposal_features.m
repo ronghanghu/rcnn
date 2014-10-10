@@ -1,7 +1,7 @@
 function feat = proposal_features(im, boxes, rcnn_model)
 
-% fixed_sizes = [640, 768, 917, 1152, 1600]';
-fixed_sizes = [640, 768, 917, 1152]';
+fixed_sizes = [640, 768, 917, 1152, 1600]';
+% fixed_sizes = [917]';
 max_proposal_num = 10000;
 
 % get channel mean
