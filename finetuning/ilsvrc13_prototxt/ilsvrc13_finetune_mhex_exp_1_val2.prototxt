@@ -363,7 +363,7 @@ layers {
   layer {
     name: "mhex_mat1"
     type: "innerproduct"
-    num_output: 
+    num_output: 201
     weight_filler {
       type: "gaussian"
       std: 0.01

@@ -12,7 +12,7 @@ layers {
     det_crop_mode: "warp"
     det_fg_threshold: 0.5
     det_bg_threshold: 0.5
-    det_fg_fraction: 0.25
+    det_fg_fraction: 1
   }
   top: "data"
   top: "label"
@@ -363,7 +363,7 @@ layers {
   layer {
     name: "mhex_mat1"
     type: "innerproduct"
-    num_output: 
+    num_output: 201
     weight_filler {
       type: "gaussian"
       std: 0.01
