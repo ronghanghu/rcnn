@@ -344,30 +344,10 @@ layers {
   name: "prob_state"
   type: SOFTMAX
 }
+
+# use prob_state instead of mhex_mat2 for label prediction (otherwise always predict branch nodes and get 0 accuracy).
 layers {
   bottom: "prob_state"
-  top: "mhex_mat2"
-  name: "mhex_mat2"
-  type: INNER_PRODUCT
-  blobs_lr: 0
-  blobs_lr: 0
-  weight_decay: 0
-  weight_decay: 0
-  inner_product_param {
-    num_output: 472
-    weight_filler {
-      type: "gaussian"
-      std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
-  }
-}
-
-layers {
-  bottom: "mhex_mat2"
   bottom: "label"
   top: "accuracy"
   name: "accuracy"
