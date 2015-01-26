@@ -25,7 +25,7 @@ function rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sa
 % ---------------------------------------------------------
 
 assert(length(map_label) == length(imdb));
-assert(length(map_vec) == length(imdb));
+assert(length(whole_im) == length(imdb));
 
 if length(imdb) == 1 && ...
     (~exist('window_file_name', 'var') || isempty(window_file_name))
