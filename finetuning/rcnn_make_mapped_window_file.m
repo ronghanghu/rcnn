@@ -75,8 +75,10 @@ for ii = 1:length(imdb)
         labels = map_vec(labels + 1);
         valid = (labels >= 0);
         labels = labels(valid);
+        ovs = ovs(valid);
         bboxes = bboxes(valid, :);
         assert(size(labels, 1) == size(bboxes, 1));
+        assert(size(ovs, 1) == size(bboxes, 1));
         num_boxes = size(bboxes, 1);
         if num_boxes == 0
           continue
