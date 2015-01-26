@@ -77,7 +77,7 @@ for ii = 1:length(imdb)
         labels = labels(valid);
         bboxes = bboxes(valid);
         num_boxes = size(bboxes, 1);
-        if num_boxes > 0
+        if num_boxes == 0
           continue
         end
       end
