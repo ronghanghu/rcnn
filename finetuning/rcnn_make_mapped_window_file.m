@@ -1,4 +1,4 @@
-function rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sample, map_label, whole_im, map_vec)
+function ending_index = rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sample, map_label, whole_im, map_vec, starting_index)
 % rcnn_make_window_file(imdb, out_dir)
 %   Makes a window file that can be used by the caffe WindowDataLayer
 %   for finetuning.
@@ -24,6 +24,24 @@ function rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sa
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
+if ~exist('map_label', 'var')
+  map_label = false(length(imdb), 1);
+  map_vec = [];
+end
+assert(exist('map_vec', 'var'));
+if ~isempty(map_vec)
+  assert(size(map_vec, 1) == length(imdb));
+  assert(size(map_vec, 2) == length(imdb));
+end
+
+if ~exist('whole_im', 'var')
+  whole_im = false(length(imdb), 1);
+end
+
+if ~exist('starting_index', 'var')
+  starting_index = 0;
+end
+
 assert(length(map_label) == length(imdb));
 assert(length(whole_im) == length(imdb));
 
@@ -44,7 +62,8 @@ fid = fopen(window_file, 'wt');
 channels = 3; % three channel images
 
 skip = 0;
-image_index = 0;
+image_index = starting_index;
+
 for ii = 1:length(imdb)
   roidb = imdb(ii).roidb_func(imdb(ii));
   
@@ -113,3 +132,5 @@ for ii = 1:length(imdb)
   end
 end
 fclose(fid);
+
+ending_index = image_index;
