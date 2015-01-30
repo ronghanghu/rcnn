@@ -30,8 +30,7 @@ if ~exist('map_label', 'var')
 end
 assert(exist('map_vec', 'var') > 0);
 if ~isempty(map_vec)
-  assert(size(map_vec, 1) == length(imdb));
-  assert(size(map_vec, 2) == 1);
+  assert(isvector(map_vec));
 end
 
 if ~exist('whole_im', 'var')
