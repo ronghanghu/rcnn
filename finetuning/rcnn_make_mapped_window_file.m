@@ -1,5 +1,5 @@
 function ending_index = rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sample, map_label, whole_im, map_vec, starting_index)
-% rcnn_make_window_file(imdb, out_dir)
+% ending_index = rcnn_make_mapped_window_file(imdb, out_dir, window_file_name, num_to_sample, map_label, whole_im, map_vec, starting_index)
 %   Makes a window file that can be used by the caffe WindowDataLayer
 %   for finetuning.
 %
@@ -28,7 +28,7 @@ if ~exist('map_label', 'var')
   map_label = false(length(imdb), 1);
   map_vec = [];
 end
-assert(exist('map_vec', 'var'));
+assert(exist('map_vec', 'var') > 0);
 if ~isempty(map_vec)
   assert(size(map_vec, 1) == length(imdb));
   assert(size(map_vec, 2) == length(imdb));
