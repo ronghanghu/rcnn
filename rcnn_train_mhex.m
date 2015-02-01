@@ -83,7 +83,7 @@ mhex_mat1 = rcnn_model.cnn.layers(9).weights{1};
 
 % subtract the background scores from every class score
 % the background class is the first class
-bg_subtract = [-ones(1, length(classes)); eye(length(classes))];
+bg_subtract = [-ones(1, length(rcnn_model.classes)); eye(length(rcnn_model.classes))];
 
 W = fc8_W * mhex_mat1 * bg_subtract;
 B = fc8_B * mhex_mat1 * bg_subtract;
