@@ -98,7 +98,11 @@ rcnn_model.detectors.B = B;
 % % Get the average norm of the features
 % opts.feat_norm_mean = rcnn_feature_stats(imdb, opts.layer, rcnn_model);
 % fprintf('average norm = %.3f\n', opts.feat_norm_mean);
-% rcnn_model.training_opts = opts;
+
+% keep the default norm for no-scaling
+opts.feat_norm_mean = 20;
+rcnn_model.training_opts = opts;
+
 % % ------------------------------------------------------------------------
 % 
 % % ------------------------------------------------------------------------
