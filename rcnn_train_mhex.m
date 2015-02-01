@@ -78,7 +78,7 @@ rcnn_model.classes = imdb.classes;
 % ------------------------------------------------------------------------
 % create classifiers by net surgery on fc8 and mhex_mat1 layer
 fc8_W = rcnn_model.cnn.layers(8).weights{1};
-fc8_B = rcnn_model.cnn.layers(8).weights{2};
+fc8_B = rcnn_model.cnn.layers(8).weights{2}';
 mhex_mat1 = rcnn_model.cnn.layers(9).weights{1};
 
 % subtract the background scores from every class score
@@ -86,7 +86,7 @@ mhex_mat1 = rcnn_model.cnn.layers(9).weights{1};
 bg_subtract = [-ones(1, length(classes)); eye(length(classes))];
 
 W = fc8_W * mhex_mat1 * bg_subtract;
-B = (fc8_B' * mhex_mat1 * bg_subtract)';
+B = fc8_B * mhex_mat1 * bg_subtract;
 
 rcnn_model.detectors.W = W;
 rcnn_model.detectors.B = B;
