@@ -17,6 +17,7 @@ function roidb = roidb_from_ilsvrc12_loc(imdb)
 % ---------------------------------------------------------
 
 cache_file = ['./imdb/cache/roidb_' imdb.name];
+diary(['./imdb/cache/roidb_' imdb.name '.log'])
 try
   load(cache_file);
 catch
