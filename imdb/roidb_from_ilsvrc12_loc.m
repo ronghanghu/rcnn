@@ -105,17 +105,21 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
   try
     assert(length(gt_classes) == num_gt_boxes);
   catch
-    fprintf('skipping image %s\n', ilsvrc_rec.filename);
-    % disp({ilsvrc_rec.objects.class});
-    % gt_classes = zeros(num_gt_boxes, 1);
-    % gt_classes(:) = wnid2label_map(['n' ilsvrc_rec.folder]);
-    rec.gt = [];
-    rec.is_difficult = [];
-    rec.overlap = [];
-    rec.boxes = [];
-    rec.feat = [];
-    rec.class = [];
-    return
+    fprintf('image %s has not class annotation\n', ilsvrc_rec.filename);
+    disp({ilsvrc_rec.objects.class});
+    gt_classes = zeros(num_gt_boxes, 1);
+    try
+      gt_classes(:) = wnid2label_map(['n' ilsvrc_rec.folder]);
+    catch
+      keyboard
+    end
+    % rec.gt = [];
+    % rec.is_difficult = [];
+    % rec.overlap = [];
+    % rec.boxes = [];
+    % rec.feat = [];
+    % rec.class = [];
+    % return
   end
 else
   gt_boxes = [];
