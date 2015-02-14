@@ -24,39 +24,40 @@ catch
 
   roidb.name = imdb.name;
 
-  is_train = false;
-  match = regexp(roidb.name, 'ilsvrc13_train_pos_(?<class_num>\d+)', 'names');
-  if ~isempty(match)
-    is_train = true;
-  end
-  is_test = false;
-  if strcmp(roidb.name, 'ilsvrc13_test');
-    is_test = true;
-  end
+  is_train = true;
+%   is_train = false;
+%   match = regexp(roidb.name, 'ilsvrc13_train_pos_(?<class_num>\d+)', 'names');
+%   if ~isempty(match)
+%     is_train = true;
+%   end
+%   is_test = false;
+%   if strcmp(roidb.name, 'ilsvrc13_test');
+%     is_test = true;
+%   end
 
-  regions_file = fullfile('data', 'selective_search_data', [roidb.name '.mat']);
-  if exist(regions_file, 'file') ~= 0
-    fprintf('Loading region proposals...');
-    regions = load(regions_file);
-    fprintf('done\n');
-  else
-    warning('no region file');
+%   regions_file = fullfile('data', 'selective_search_data', [roidb.name '.mat']);
+%   if exist(regions_file, 'file') ~= 0
+%     fprintf('Loading region proposals...');
+%     regions = load(regions_file);
+%     fprintf('done\n');
+%   else
+%     warning('no region file');
     regions.boxes = cell(length(imdb.image_ids), 1);
-  end
+%   end
 
   hash = make_hash(imdb.details.meta_det.synsets);
 
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
-    if is_train
+%     if is_train
       anno_file = fullfile(imdb.details.bbox_path, ...
           get_wnid(imdb.image_ids{i}), [imdb.image_ids{i} '.xml']);
-    elseif is_test
-      anno_file = [];
-    else
-      anno_file = fullfile(imdb.details.bbox_path, ...
-          [imdb.image_ids{i} '.xml']);
-    end
+%     elseif is_test
+%       anno_file = [];
+%     else
+%       anno_file = fullfile(imdb.details.bbox_path, ...
+%           [imdb.image_ids{i} '.xml']);
+%     end
 
     try
       rec = VOCreadrecxml(anno_file, hash);
@@ -78,7 +79,9 @@ end
 function rec = attach_proposals(ilsvrc_rec, boxes)
 % ------------------------------------------------------------------------
 
-num_classes = 200;
+% num_classes = 200;
+num_classes = 1000;
+assert(isempty(boxes));
 
 % change selective search order from [y1 x1 y2 x2] to [x1 y1 x2 y2]
 if ~isempty(boxes)
