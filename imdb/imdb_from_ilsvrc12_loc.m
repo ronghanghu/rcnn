@@ -129,11 +129,17 @@ catch
       lerr = lasterror;
       % gah, annoying data issues
       if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')
-        warning('converting %s from CMYK to RGB', imdb.image_at(i));
-        cmd = ['convert ' imdb.image_at(i) ' -colorspace CMYK -colorspace RGB ' ...
-                imdb.image_at(i)];
-        system(cmd);
-        im = imread(imdb.image_at(i));
+%         warning('converting %s from CMYK to RGB', imdb.image_at(i));
+%         cmd = ['convert ' imdb.image_at(i) ' -colorspace CMYK -colorspace RGB ' ...
+%                 imdb.image_at(i)];
+%         system(cmd);
+%         im = imread(imdb.image_at(i));
+
+        warning('reading %s using imfinfo', imdb.image_at(i));
+        info = imfinfo(imdb.image_at(i));
+        assert(isscalar(info.Height) && info.Height > 0);
+        assert(isscalar(info.Width) && info.Width > 0);
+        imdb.sizes(i, :) = [info.Height info.Width];
       else
         error(lerr.message);
       end
