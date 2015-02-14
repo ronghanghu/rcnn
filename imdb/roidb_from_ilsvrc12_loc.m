@@ -106,7 +106,7 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
     assert(length(gt_classes) == num_gt_boxes);
   catch
     fprintf('image below has no gt labels: ');
-    fprintf('n%s\n', ilsvrc_rec.folder);
+    fprintf('n%s\n', ilsvrc_rec.filename);
     disp({ilsvrc_rec.objects.class});
     gt_classes = zeros(num_gt_boxes, 1);
     gt_classes(:) = wnid2label_map(['n' ilsvrc_rec.folder]);
