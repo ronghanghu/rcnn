@@ -23,8 +23,10 @@ catch
   addpath(fullfile(imdb.details.devkit_path, 'evaluation')); 
 
   roidb.name = imdb.name;
+  roidb.details.wnid2label_map = ...
+      containers.Map({imdb.details.meta_det.synsets.WNID}, ...
+      1:length(imdb.details.meta_det.synsets));
 
-  is_train = true;
 %   is_train = false;
 %   match = regexp(roidb.name, 'ilsvrc13_train_pos_(?<class_num>\d+)', 'names');
 %   if ~isempty(match)
@@ -64,7 +66,7 @@ catch
     catch
       rec = [];
     end
-    roidb.rois(i) = attach_proposals(rec, regions.boxes{i});
+    roidb.rois(i) = attach_proposals(rec, regions.boxes{i}, roidb.details.wnid2label_map);
   end
 
   rmpath(fullfile(imdb.details.devkit_path, 'evaluation')); 
@@ -76,7 +78,7 @@ end
 
 
 % ------------------------------------------------------------------------
-function rec = attach_proposals(ilsvrc_rec, boxes)
+function rec = attach_proposals(ilsvrc_rec, boxes, wnid2label_map)
 % ------------------------------------------------------------------------
 
 % num_classes = 200;
@@ -99,6 +101,14 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
   all_boxes = cat(1, gt_boxes, boxes);
   gt_classes = cat(1, ilsvrc_rec.objects(:).label);
   num_gt_boxes = size(gt_boxes, 1);
+  try
+    assert(length(gt_classes) == num_gt_boxes);
+  catch
+    warning('image below has no gt labels');
+    disp(ilsvrc_rec);
+    gt_classes = zeros(num_gt_boxes, 1);
+    gt_classes(:) = wnid2label_map(['n' ilsvrc_rec.folder]);
+  end
 else
   gt_boxes = [];
   all_boxes = boxes;
