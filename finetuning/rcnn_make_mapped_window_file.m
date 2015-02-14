@@ -124,6 +124,9 @@ for ii = 1:length(imdb)
         imdb(ii).sizes(i, 2));
       fprintf(fid, '%d\n', num_boxes);
       
+      if size(labels, 1) == 1
+        labels = labels';
+      end
       data = [labels full(ovs) bboxes];
       fprintf(fid, '%d %.3f %d %d %d %d\n', data');
       image_index = image_index + 1;
