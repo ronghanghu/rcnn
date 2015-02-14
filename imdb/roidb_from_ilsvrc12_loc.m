@@ -103,14 +103,14 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
   all_boxes = cat(1, gt_boxes, boxes);
   gt_classes = cat(1, ilsvrc_rec.objects(:).label);
   num_gt_boxes = size(gt_boxes, 1);
-  try
-    assert(length(gt_classes) == num_gt_boxes);
-  catch
-    fprintf('image %s has no gt-class annotation\n', anno_file);
+  
+  if isempty(gt_classes)
     % just assign image-level labels to each object box
     try
       gt_classes = zeros(num_gt_boxes, 1);
-      gt_classes(:) = wnid2label_map(WNID);
+      label = wnid2label_map(WNID);
+      assert(1 <= label && label <= 1000);
+      gt_classes(:) = label;
     catch
       fprintf('serious issue occurred within image %s, please check\n', anno_file);
       keyboard
