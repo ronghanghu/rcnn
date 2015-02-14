@@ -53,8 +53,9 @@ catch
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
 %     if is_train
+      WNID = get_wnid(imdb.image_ids{i});
       anno_file = fullfile(imdb.details.bbox_path, ...
-          get_wnid(imdb.image_ids{i}), [imdb.image_ids{i} '.xml']);
+          WNID, [imdb.image_ids{i} '.xml']);
 %     elseif is_test
 %       anno_file = [];
 %     else
@@ -67,7 +68,7 @@ catch
     catch
       rec = [];
     end
-    roidb.rois(i) = attach_proposals(rec, regions.boxes{i}, roidb.details.wnid2label_map);
+    roidb.rois(i) = attach_proposals(rec, regions.boxes{i}, WNID, roidb.details.wnid2label_map, anno_file);
   end
 
   rmpath(fullfile(imdb.details.devkit_path, 'evaluation')); 
@@ -79,7 +80,7 @@ end
 
 
 % ------------------------------------------------------------------------
-function rec = attach_proposals(ilsvrc_rec, boxes, wnid2label_map)
+function rec = attach_proposals(ilsvrc_rec, boxes, WNID, wnid2label_map, anno_file)
 % ------------------------------------------------------------------------
 
 % num_classes = 200;
@@ -105,12 +106,13 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
   try
     assert(length(gt_classes) == num_gt_boxes);
   catch
-    fprintf('image %s has not class annotation\n', ilsvrc_rec.filename);
-    disp({ilsvrc_rec.objects.class});
-    gt_classes = zeros(num_gt_boxes, 1);
+    fprintf('image %s has no gt-class annotation\n', anno_file);
+    % just assign image-level labels to each object box
     try
-      gt_classes(:) = wnid2label_map(['n' ilsvrc_rec.folder]);
+      gt_classes = zeros(num_gt_boxes, 1);
+      gt_classes(:) = wnid2label_map(WNID);
     catch
+      fprintf('serious issue occurred within image %s, please check\n', anno_file);
       keyboard
     end
     % rec.gt = [];
