@@ -1,4 +1,4 @@
-function plot_10k_det(im, dets, classes, threshold)
+function show_10k_det(im, dets, classes, score_thresh, nms_thresh)
 % Draw bounding boxes on top of an image.
 %   showboxes(im, boxes, out)
 %
@@ -18,22 +18,27 @@ function plot_10k_det(im, dets, classes, threshold)
 % your project.
 % -------------------------------------------------------
 
+if ~exist('score_thresh', 'var')
+  score_thresh = 0;
+end
+if ~exist(
 boxes = [];
 bclasses = [];
 for i = 1:length(dets)
-  above_thresh = (dets{i}(:, 5) >= threshold);
+  above_thresh = (dets{i}(:, 5) >= score_thresh);
   det_num = sum(above_thresh);
-  if det_num > 0
-    fprintf('class %d has %d detections\n', i, det_num);
-  end
   boxes = cat(1, boxes, dets{i}(above_thresh, :));
-  bclasses = cat(1, bclasses, i * ones(sum(above_thresh), 1));
+  bclasses = cat(1, bclasses, i * ones(det_num, 1));
 end
+
+% across category nms
+keep = nms(boxes, nms_thresh);
+boxes = boxes(keep, :);
+bclasses = bclasses(keep);
 
 cwidth = 2;
 h = figure;
 image(im);
-truesize(h);
 
 axis image;
 axis off;
