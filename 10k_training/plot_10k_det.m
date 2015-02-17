@@ -1,0 +1,65 @@
+function plot_10k_det(im, dets, classes, threshold)
+% Draw bounding boxes on top of an image.
+%   showboxes(im, boxes, out)
+%
+%   If out is given, a pdf of the image is generated (requires export_fig).
+
+% AUTORIGHTS
+% -------------------------------------------------------
+% Copyright (C) 2011-2012 Ross Girshick
+% Copyright (C) 2008, 2009, 2010 Pedro Felzenszwalb, Ross Girshick
+% Copyright (C) 2007 Pedro Felzenszwalb, Deva Ramanan
+%
+% This file is part of the voc-releaseX code
+% (http://people.cs.uchicago.edu/~rbg/latent/)
+% and is available under the terms of an MIT-like license
+% provided in COPYING. Please retain this notice and
+% COPYING if you use this file (or a portion of it) in
+% your project.
+% -------------------------------------------------------
+
+boxes = [];
+bclasses = [];
+for i = 1:length(dets)
+  above_thresh = (dets{i}(:, 5) >= threshold);
+  det_num = sum(above_thresh);
+  if det_num > 0
+    fprintf('class %d has %d detections\n', i, det_num);
+  end
+  boxes = cat(1, boxes, dets{i}(above_thresh, :));
+  bclasses = cat(1, bclasses, i * ones(sum(above_thresh), 1));
+end
+
+cwidth = 2;
+h = figure;
+image(im);
+truesize(h);
+
+axis image;
+axis off;
+set(h, 'Color', 'white');
+
+if ~isempty(boxes)
+  numfilters = size(boxes,1); %floor(size(boxes, 2)/4);
+  
+  % draw the boxes with the detection window on top (reverse order)
+  for i = numfilters:-1:1
+    x1 = boxes(i,1);%boxes(:,1+(i-1)*4);
+    y1 = boxes(i,2);%boxes(:,2+(i-1)*4);
+    x2 = boxes(i,3);%boxes(:,3+(i-1)*4);
+    y2 = boxes(i,4);%boxes(:,4+(i-1)*4);
+    % remove unused filters
+    del = find(((x1 == 0) .* (x2 == 0) .* (y1 == 0) .* (y2 == 0)) == 1);
+    x1(del) = [];
+    x2(del) = [];
+    y1(del) = [];
+    y2(del) = [];
+    c = 'r';
+    s = '-';
+    line([x1 x1 x2 x2 x1]', [y1 y2 y2 y1 y1]', 'color', c, 'linewidth', cwidth, 'linestyle', s);
+    ss = regexp(classes{bclasses(i)}, ',', 'split');
+    x_t = double(max(5, x1-5)); y_t = double(min(y2+5, size(im, 1)-15));
+    text(x_t,y_t,sprintf('%s: %2.1f', ss{1}, boxes(i,5)),...
+      'BackgroundColor', [0.7 0.9 0.7], 'FontSize', 20, 'Color', c);
+  end
+end
