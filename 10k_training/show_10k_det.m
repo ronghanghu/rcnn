@@ -80,5 +80,6 @@ end
 
 if exist('save_file', 'var')
   set(gca, 'LooseInset', get(gca, 'TightInset'));
+  set(h, 'Position', [418, 276, 512, 384]);
   saveas(h, save_file);
 end
