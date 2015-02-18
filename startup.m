@@ -21,6 +21,11 @@ if exist('external/caffe/matlab/caffe')
 else
   warning('Please install Caffe in ./external/caffe');
 end
+
+if ~exist('external/mhex_graph')
+  warning('Please install MHEX Graph in ./external/mhex_graph');
+end
+
 addpath('experiments');
 addpath('imdb');
 addpath('vis/pool5-explorer');

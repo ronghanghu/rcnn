@@ -1,4 +1,4 @@
-function show_10k_det(im, dets, classes, score_thresh, nms_thresh)
+function show_10k_det(im, dets, classes, score_thresh, nms_thresh, save_file)
 % Draw bounding boxes on top of an image.
 %   showboxes(im, boxes, out)
 %
@@ -69,4 +69,8 @@ if ~isempty(boxes)
     text(x_t,y_t,sprintf('%s: %2.1f', ss{1}, boxes(i,5)),...
       'BackgroundColor', [0.7 0.9 0.7], 'FontSize', 20, 'Color', c);
   end
+end
+
+if exist('save_file', 'var')
+  saveas(h, save_file);
 end
