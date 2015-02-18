@@ -22,8 +22,9 @@ if ~exist('score_thresh', 'var')
   score_thresh = 0;
 end
 if ~exist('nms_thresh', 'var')
-  nms_thresh = 0.3;
+  nms_thresh = 0.4;
 end
+
 boxes = [];
 bclasses = [];
 for i = 1:length(dets)
@@ -38,9 +39,15 @@ keep = nms(boxes, nms_thresh);
 boxes = boxes(keep, :);
 bclasses = bclasses(keep);
 
+if exist('save_file', 'var')
+  h = figure('visible', 'off');
+  image(im);
+  truesize(h);
+else
+  h = figure;
+  image(im);
+end
 cwidth = 2;
-h = figure;
-image(im);
 
 axis image;
 axis off;
@@ -72,5 +79,6 @@ if ~isempty(boxes)
 end
 
 if exist('save_file', 'var')
+  set(gca, 'LooseInset', get(gca, 'TightInset'));
   saveas(h, save_file);
 end
