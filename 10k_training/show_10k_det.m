@@ -41,13 +41,13 @@ bclasses = bclasses(keep);
 
 if exist('save_file', 'var')
   h = figure('visible', 'off');
+  cwidth = 1;
   image(im);
-  truesize(h);
 else
   h = figure;
+  cwidth = 1;
   image(im);
 end
-cwidth = 2;
 
 axis image;
 axis off;
@@ -79,7 +79,6 @@ if ~isempty(boxes)
 end
 
 if exist('save_file', 'var')
-  set(gca, 'LooseInset', get(gca, 'TightInset'));
-  set(h, 'Position', [418, 276, 512, 384]);
+  set(h, 'PaperPosition', [0, 0, 4, 3]);
   saveas(h, save_file);
 end
