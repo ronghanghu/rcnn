@@ -51,7 +51,7 @@ ip.addParamValue('max_num_neg_images', 5000, @isscalar);
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
 
-opts.net_def_file = './model-defs/rcnn_batch_256_output_mat1.prototxt';
+opts.net_def_file = 'model-defs/step_2_det_deploy.prototxt';
 
 conf = rcnn_config('sub_dir', imdb.name);
 
@@ -77,16 +77,25 @@ rcnn_model.classes = imdb.classes;
 
 % ------------------------------------------------------------------------
 % create classifiers by net surgery on fc8 and mhex_mat1 layer
-fc8_W = rcnn_model.cnn.layers(8).weights{1};
-fc8_B = rcnn_model.cnn.layers(8).weights{2}';
-mhex_mat1 = rcnn_model.cnn.layers(9).weights{1};
+assert(strcmp(rcnn_model.cnn.layers(8).layer_names, 'fc8_finetune_bg'));
+fc8_W_bg = rcnn_model.cnn.layers(8).weights{1};
+fc8_B_bg = rcnn_model.cnn.layers(8).weights{2}';
+
+assert(strcmp(rcnn_model.cnn.layers(9).layer_names, 'fc8_finetune_200_leaf'));
+fc8_W_leaf = rcnn_model.cnn.layers(9).weights{1};
+fc8_B_leaf = rcnn_model.cnn.layers(9).weights{2}';
+
+assert(strcmp(rcnn_model.cnn.layers(10).layer_names, 'fc8_finetune_271_internal'));
+fc8_W_internal = rcnn_model.cnn.layers(10).weights{1};
+fc8_B_internal = rcnn_model.cnn.layers(10).weights{2}';
+
+assert(strcmp(rcnn_model.cnn.layers(11).layer_names, 'mhex_mat1'));
+mhex_mat1 = rcnn_model.cnn.layers(11).weights{1};
 
 % subtract the background scores from every class score
 % the background class is the first class
-bg_subtract = [-ones(1, length(rcnn_model.classes)); eye(length(rcnn_model.classes))];
-
-W = fc8_W * mhex_mat1 * bg_subtract;
-B = fc8_B * mhex_mat1 * bg_subtract;
+W = bsxfun(@minus, [fc8_W_leaf, fc8_W_internal] * mhex_mat1, fc8_W_bg);
+B = bsxfun(@minus, [fc8_B_leaf, fc8_B_internal] * mhex_mat1, fc8_B_bg);
 
 rcnn_model.detectors.W = W;
 rcnn_model.detectors.B = B;
