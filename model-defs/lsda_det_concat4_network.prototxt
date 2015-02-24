@@ -4,22 +4,6 @@ input_dim: 3
 input_dim: 227
 input_dim: 227
 layers {
-  name: "data"
-  type: DATA
-  top: "data"
-  top: "label"
-  data_param {
-    source: "datasets/imagenet200_classify_val_leveldb"
-    backend: LEVELDB
-    batch_size: 128
-  }
-  transform_param {
-    crop_size: 227
-    mean_file: "/home/ronghang/workspace/caffe/data/ilsvrc12/imagenet_mean.binaryproto"
-    mirror: false
-  }
-}
-layers {
   name: "conv1"
   type: CONVOLUTION
   bottom: "data"
