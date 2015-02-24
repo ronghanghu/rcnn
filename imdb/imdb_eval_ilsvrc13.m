@@ -40,6 +40,9 @@ for cls = 1:length(all_boxes)
 
   % Keep top K
   X = cat(1, boxes{:});
+  if size(X, 1) == 0
+    continue
+  end
   scores = sort(X(:,end), 'descend');
   thresh = scores(min(length(scores), top_k));
   for image_index = 1:length(boxes);
