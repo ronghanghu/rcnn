@@ -30,4 +30,5 @@ addpath('experiments');
 addpath('imdb');
 addpath('vis/pool5-explorer');
 addpath('10k_training');
+addpath('inspect_200_detection');
 fprintf('R-CNN startup done\n');
