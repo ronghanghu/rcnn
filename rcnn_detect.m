@@ -13,7 +13,7 @@ if ~exist('score_thresh', 'var')
   score_thresh = -2;
 end
 if ~exist('nms_thresh', 'var')
-  nms_thresh = 0.1;
+  nms_thresh = 0.3;
 end
 
 % compute selective search candidates
