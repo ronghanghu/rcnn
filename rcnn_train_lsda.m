@@ -51,7 +51,7 @@ ip.addParamValue('max_num_neg_images', 5000, @isscalar);
 ip.parse(imdb, varargin{:});
 opts = ip.Results;
 
-opts.net_def_file = './model-defs/lsda_det_concat4_network.prototxt';
+opts.net_def_file = './model-defs/lsda_2_det_deploy.prototxt';
 
 conf = rcnn_config('sub_dir', imdb.name);
 
@@ -77,30 +77,22 @@ rcnn_model.classes = imdb.classes;
 
 % ------------------------------------------------------------------------
 % create classifiers by net surgery on fc8 and mhex_mat1 layer
-assert(strcmp(rcnn_model.cnn.layers(8).layer_names, 'fc8-background'));
+assert(strcmp(rcnn_model.cnn.layers(8).layer_names, 'fc8_finetune_bg'));
 fc8_W_bg = rcnn_model.cnn.layers(8).weights{1};
 fc8_B_bg = rcnn_model.cnn.layers(8).weights{2}';
 
-assert(strcmp(rcnn_model.cnn.layers(9).layer_names, 'fc8classify-a'));
-fc8_W_a = rcnn_model.cnn.layers(9).weights{1};
-fc8_B_a = rcnn_model.cnn.layers(9).weights{2}';
+assert(strcmp(rcnn_model.cnn.layers(9).layer_names, 'fc8_finetune_100B'));
+fc8_W_100B = rcnn_model.cnn.layers(9).weights{1};
+fc8_B_100B = rcnn_model.cnn.layers(9).weights{2}';
 
-assert(strcmp(rcnn_model.cnn.layers(10).layer_names, 'fc8classify-b'));
-fc8_W_b = rcnn_model.cnn.layers(10).weights{1};
-fc8_B_b = rcnn_model.cnn.layers(10).weights{2}';
-
-assert(strcmp(rcnn_model.cnn.layers(11).layer_names, 'fc8classify-c'));
-fc8_W_c = rcnn_model.cnn.layers(11).weights{1};
-fc8_B_c = rcnn_model.cnn.layers(11).weights{2}';
-
-assert(strcmp(rcnn_model.cnn.layers(12).layer_names, 'fc8classify-d'));
-fc8_W_d = rcnn_model.cnn.layers(12).weights{1};
-fc8_B_d = rcnn_model.cnn.layers(12).weights{2}';
+assert(strcmp(rcnn_model.cnn.layers(10).layer_names, 'fc8_finetune_100A'));
+fc8_W_100A = rcnn_model.cnn.layers(10).weights{1};
+fc8_B_100A = rcnn_model.cnn.layers(10).weights{2}';
 
 % subtract the background scores from every class score
 % the background class is the first class
-W = bsxfun(@minus, [fc8_W_a, fc8_W_b, fc8_W_c, fc8_W_d], fc8_W_bg);
-B = bsxfun(@minus, [fc8_B_a, fc8_B_b, fc8_B_c, fc8_B_d], fc8_B_bg);
+W = bsxfun(@minus, [fc8_W_100B, fc8_W_100A], fc8_W_bg);
+B = bsxfun(@minus, [fc8_B_100B, fc8_B_100A], fc8_B_bg);
 
 rcnn_model.detectors.W = W;
 rcnn_model.detectors.B = B;
