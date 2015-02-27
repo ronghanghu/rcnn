@@ -85,15 +85,15 @@ layers {
 }
 layers {
   bottom: "fc7"
-  top: "fc8_ilsvrc"
-  name: "fc8_ilsvrc"
+  top: "fc8_pascal"
+  name: "fc8_pascal"
   type: INNER_PRODUCT
   blobs_lr: 10
   blobs_lr: 20
   weight_decay: 1
   weight_decay: 0
   inner_product_param {
-    num_output: 201
+    num_output: 21
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -105,7 +105,7 @@ layers {
   }
 }
 layers {
-  bottom: "fc8_ilsvrc"
+  bottom: "fc8_pascal"
   bottom: "label"
   name: "loss"
   type: SOFTMAX_LOSS

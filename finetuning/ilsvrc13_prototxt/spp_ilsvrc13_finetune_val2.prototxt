@@ -85,8 +85,8 @@ layers {
 }
 layers {
   bottom: "fc7"
-  top: "fc8_finetune"
-  name: "fc8_finetune"
+  top: "fc8_ilsvrc"
+  name: "fc8_ilsvrc"
   type: INNER_PRODUCT
   blobs_lr: 10
   blobs_lr: 20
@@ -105,7 +105,7 @@ layers {
   }
 }
 layers {
-  bottom: "fc8_finetune"
+  bottom: "fc8_ilsvrc"
   top: "prob"
   name: "prob"
   type: SOFTMAX
