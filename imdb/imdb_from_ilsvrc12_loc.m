@@ -125,6 +125,7 @@ catch
     tic_toc_print('imdb (%s): %d/%d\n', imdb.name, i, length(imdb.image_ids));
     try
       im = imread(imdb.image_at(i));
+      imdb.sizes(i, :) = [size(im, 1) size(im, 2)];
     catch
       lerr = lasterror;
       % gah, annoying data issues
@@ -144,7 +145,6 @@ catch
         error(lerr.message);
       end
     end
-    imdb.sizes(i, :) = [size(im, 1) size(im, 2)];
     imdb.is_blacklisted(i) = is_blacklisted.isKey(i);
 
     % faster, but seems to fail on some images :(
