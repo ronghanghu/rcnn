@@ -1,6 +1,7 @@
 clear;
 
 im_path = '/y/mrowca/3Kbboxes/extracted';
+extension = '.JPEG';
 
 load external/mhex_graph/+imagenet/meta_200.mat;
 load external/mhex_graph/+imagenet/meta_1k.mat;
@@ -20,7 +21,7 @@ for n_im = 1:length(im_list)
   im_name = im_list{n_im};
   wnid = im_name(1:9);
   
-  if exist(fullfile(im_path, wnid, im_name), 'file')
+  if exist(fullfile(im_path, wnid, [im_name extension]), 'file')
     label = wnid2label_3k(wnid);
     im_cell{label} = cat(1, im_cell{label}, {im_name});
   else
