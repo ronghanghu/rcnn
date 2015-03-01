@@ -1,7 +1,12 @@
 clear;
 
-load meta_all;
 im_path = '/y/mrowca/3Kbboxes/extracted';
+
+load external/mhex_graph/+imagenet/meta_200.mat;
+load external/mhex_graph/+imagenet/meta_1k.mat;
+load external/mhex_graph/+imagenet/meta_7k.mat;
+wnids_3k = textread('./3k_training/wnids_3k.txt', '%s');
+wnid2label_3k = containers.Map(wnids_3k, 1:length(wnids_3k));
 
 % load the list of all annotated image filenames
 im_list = textread('./3k_training/annotation_list_3k_before_prune.txt', '%s');
@@ -11,6 +16,7 @@ im_list = textread('./3k_training/annotation_list_3k_before_prune.txt', '%s');
 im_cell = cell(length(wnids_3k), 1);
 skipped_num = 0;
 for n_im = 1:length(im_list)
+  tic_toc_print('%d / %d\n', n_im, length(im_list));
   im_name = im_list{n_im};
   wnid = im_name(1:9);
   
