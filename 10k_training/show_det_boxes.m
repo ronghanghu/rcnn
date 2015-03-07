@@ -1,4 +1,4 @@
-function show_det_boxes(im, dets, classes, score_thresh, inclass_nms_thresh, across_nms_thresh, color, save_file)
+function show_det_boxes(im, dets, classes, score_thresh, inclass_nms_thresh, across_nms_thresh, max_disp_num, color, save_file)
 % Draw bounding boxes on top of an image.
 %   showboxes(im, boxes, out)
 %
@@ -30,9 +30,13 @@ end
 if ~exist('color', 'var')
   color = 'r';
 end
+if ~exist('max_disp_num', 'var')
+  max_disp_num = 1e8;
+end
 
 all_bboxes = [];
 all_bboxclass = [];
+% within category thresholding and nms
 for i = 1:length(dets)
   above_thresh = (dets{i}(:, 5) >= score_thresh);
   boxes = dets{i}(above_thresh, :);
@@ -47,6 +51,14 @@ end
 keep = nms(all_bboxes, across_nms_thresh);
 all_bboxes = all_bboxes(keep, :);
 all_bboxclass = all_bboxclass(keep);
+
+% taking at most max_disp_num boxes
+if size(all_bboxes, 1) > max_disp_num
+  [~, keep] = sort(all_bboxes(:, end));
+  keep = keep(1:max_disp_num);
+  all_bboxes = all_bboxes(keep, :);
+  all_bboxclass = all_bboxclass(keep);
+end
 
 if exist('save_file', 'var')
   h = figure('visible', 'off');
