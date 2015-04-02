@@ -75,22 +75,22 @@ catch
   
   for i = 1:length(imdb.image_ids)
     tic_toc_print('imdb (%s): %d/%d\n', imdb.name, i, length(imdb.image_ids));
-%     try
-%       im = imread(imdb.image_at(i));
-%       imdb.sizes(i, :) = [size(im, 1) size(im, 2)];
-%     catch
-%       lerr = lasterror;
-%       % gah, annoying data issues
-%       if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')   
-%         warning('reading %s using imfinfo', imdb.image_at(i));
+    try
+      im = imread(imdb.image_at(i));
+      imdb.sizes(i, :) = [size(im, 1) size(im, 2)];
+    catch
+      lerr = lasterror;
+      % gah, annoying data issues
+      if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')   
+        warning('reading %s using imfinfo', imdb.image_at(i));
         info = imfinfo(imdb.image_at(i));
         assert(isscalar(info.Height) && info.Height > 0);
         assert(isscalar(info.Width) && info.Width > 0);
         imdb.sizes(i, :) = [info.Height info.Width];
-%       else
-%         error(lerr.message);
-%       end
-%     end
+      else
+        error(lerr.message);
+      end
+    end
   end
   
   fprintf('Saving imdb to cache...');
