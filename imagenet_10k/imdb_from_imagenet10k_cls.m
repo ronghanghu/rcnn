@@ -88,11 +88,21 @@ catch
         assert(isscalar(info.Width) && info.Width > 0);
         imdb.sizes(i, :) = [info.Height info.Width];
       else
-        error(lerr.message);
+        warning(lerr.message);
+        warning(imdb.image_at(i));
+        % blacklist error images (for removal)
+        imdb.is_blacklisted(i) = true;
       end
     end
   end
   
+  % remove blacklisted images
+  fprintf('Remove %d blacklisted images\n', sum(imdb.is_blacklisted));
+  keep = ~imdb.is_blacklisted;
+  imdb.image_ids(keep);
+  imdb.sizes = imdb.sizes(keep, :);
+  imdb.is_blacklisted = false(length(imdb.image_ids), 1);
+
   fprintf('Saving imdb to cache...');
   save(cache_file, 'imdb', '-v7.3');
   fprintf('done\n');
