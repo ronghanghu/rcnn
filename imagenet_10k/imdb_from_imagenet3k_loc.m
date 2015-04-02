@@ -1,25 +1,15 @@
-function imdb = imdb_from_ilsvrc12_loc(root_dir, image_set)
+function imdb = imdb_from_imagenet3k_loc(root_dir, image_set)
+% create imdb from ImageNET LOC 3K dataset
+% using bounding box annotation
+% the resulting class indices are 1~10447
+% ---------------------------------------------------------
 
 % root_dir = '/work4/rbg/ILSVRC13';
 
-% for each of the 200 classes there's a
-%  train_pos_X
-%  train_neg_X
-%
-% and there's also
-%  val
-%  test
-
 % names
-% ilsvrc13_val
-% ilsvrc13_test
-% ilsvrc13_train_pos_1
-% ...
-% ...
-% ilsvrc13_train_pos_200
-%
-% split val into two folds with roughly equal # instances per class
-
+% imagenet3k_train
+% imagenet3k_val
+% imagenet3k_test
 
 %imdb.name = 'voc_train_2007'
 %imdb.image_dir = '/work4/rbg/ILSVRC/ILSVRC2013_DET_train/n02672831/'
@@ -33,11 +23,11 @@ function imdb = imdb_from_ilsvrc12_loc(root_dir, image_set)
 %imdb.eval_func = pointer to the function that evaluates detections
 %imdb.roidb_func = pointer to the function that returns regions of interest
 
-cache_file = ['./imdb/cache/imdb_ilsvrc12_loc_' image_set];
+cache_file = ['./imdb/cache/imdb_imagenet3k_loc_' image_set];
 try
   load(cache_file);
 catch
-  NUM_CLS = 1000;
+  NUM_CLS = 10447;
   bbox_path.train = fullfile(root_dir, 'ILSVRC2012_bbox_train');
   bbox_path.val   = fullfile(root_dir, 'ILSVRC2012_bbox_val');
   im_path.train   = fullfile(root_dir, 'ILSVRC2012_train');
@@ -45,7 +35,7 @@ catch
   devkit_path     = fullfile(root_dir, 'ILSVRC2013_devkit');
   meta_det        = load(fullfile(devkit_path, 'data', 'meta_clsloc.mat'));
 
-  imdb.name = ['ilsvrc12_loc_' image_set];
+  imdb.name = ['imagenet3k_loc_' image_set];
   imdb.extension = 'JPEG';
   is_blacklisted = containers.Map;
 
@@ -116,7 +106,7 @@ catch
   imdb.details.devkit_path = devkit_path;
 
   % VOC specific functions for evaluation and region of interest DB
-  imdb.roidb_func = @roidb_from_ilsvrc12_loc;
+  imdb.roidb_func = @roidb_from_imagenet3k_loc;
 
   % Some images are blacklisted due to noisy annotations
   imdb.is_blacklisted = false(length(imdb.image_ids), 1);

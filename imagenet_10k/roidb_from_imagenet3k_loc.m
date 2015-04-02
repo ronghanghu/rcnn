@@ -1,4 +1,9 @@
-function roidb = roidb_from_ilsvrc12_loc(imdb)
+function roidb = roidb_from_imagenet3k_loc(imdb)
+% create imdb from ImageNET LOC 3K dataset
+% using bounding box annotation
+% the resulting class indices are 1~10447
+% ---------------------------------------------------------
+
 % roidb = roidb_from_voc(imdb)
 %   Builds an regions of interest database from imdb image
 %   database. Uses precomputed selective search boxes available
