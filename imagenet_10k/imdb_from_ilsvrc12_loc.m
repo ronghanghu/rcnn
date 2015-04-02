@@ -7,8 +7,8 @@ function imdb = imdb_from_ilsvrc12_loc(root_dir, image_set)
 % root_dir = '/work4/rbg/ILSVRC13';
 
 % names
-% ilsvrc12_train
-% ilsvrc12_val
+% ilsvrc12_loc_train
+% ilsvrc12_loc_val
 
 %imdb.name = 'voc_train_2007'
 %imdb.image_dir = '/work4/rbg/ILSVRC/ILSVRC2013_DET_train/n02672831/'
@@ -36,8 +36,10 @@ catch
   
   imdb.name = ['ilsvrc12_loc_' image_set];
   imdb.extension = 'JPEG';
-  is_blacklisted = containers.Map;
-  
+
+  % no blacklist
+  % is_blacklisted = containers.Map;
+
   imdb.image_dir = im_path.(image_set);
   imdb.details.image_list_file = ...
     fullfile(devkit_path, 'data', ['loc_list_' image_set '.txt']);
@@ -50,9 +52,16 @@ catch
     containers.Map(imdb.classes, 1:imdb.num_classes);
   imdb.class_ids = 1:imdb.num_classes;
   
-  imdb.image_at = @(i) ...
-    fullfile(imdb.image_dir, get_wnid(imdb.image_ids{i}), ...
-    [imdb.image_ids{i} '.' imdb.extension]);
+  if strcmp(imdb.name, 'ilsvrc12_loc_train')
+    imdb.image_at = @(i) ...
+      fullfile(imdb.image_dir, get_wnid(imdb.image_ids{i}), ...
+      [imdb.image_ids{i} '.' imdb.extension]);
+  elseif strcmp(imdb.name, 'ilsvrc12_loc_val')
+    imdb.image_at = @(i) ...
+      fullfile(imdb.image_dir, [imdb.image_ids{i} '.' imdb.extension]);
+  else
+    error('unknown imdb %s', imdb.name);
+  end
   
   imdb.details.blacklist_file = [];
   
@@ -75,24 +84,26 @@ catch
     catch
       lerr = lasterror;
       % gah, annoying data issues
-      if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')
+      if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')   
         warning('reading %s using imfinfo', imdb.image_at(i));
         info = imfinfo(imdb.image_at(i));
         assert(isscalar(info.Height) && info.Height > 0);
         assert(isscalar(info.Width) && info.Width > 0);
         imdb.sizes(i, :) = [info.Height info.Width];
       else
-        error(lerr.message);
+        warning(lerr.message);
+        warning(imdb.image_at(i));
+        % blacklist error images (for removal)
+        imdb.is_blacklisted(i) = true;
       end
     end
-    imdb.is_blacklisted(i) = is_blacklisted.isKey(i);
-    
-    % faster, but seems to fail on some images :(
-    %info = imfinfo(imdb.image_at(i));
-    %assert(isscalar(info.Height) && info.Height > 0);
-    %assert(isscalar(info.Width) && info.Width > 0);
-    %imdb.sizes(i, :) = [info.Height info.Width];
   end
+  % remove blacklisted images
+  fprintf('Remove %d blacklisted images\n', sum(imdb.is_blacklisted));
+  keep = ~imdb.is_blacklisted;
+  imdb.image_ids(keep);
+  imdb.sizes = imdb.sizes(keep, :);
+  imdb.is_blacklisted = false(length(imdb.image_ids), 1);
   
   fprintf('Saving imdb to cache...');
   save(cache_file, 'imdb', '-v7.3');

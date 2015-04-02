@@ -7,9 +7,9 @@ function imdb = imdb_from_imagenet3k_loc(root_dir, image_set)
 % root_dir = '/work4/rbg/ILSVRC13';
 
 % names
-% imagenet3k_train
-% imagenet3k_val
-% imagenet3k_test
+% imagenet3k_loc_train
+% imagenet3k_loc_val
+% imagenet3k_loc_test
 
 %imdb.name = 'voc_train_2007'
 %imdb.image_dir = '/work4/rbg/ILSVRC/ILSVRC2013_DET_train/n02672831/'
@@ -99,7 +99,6 @@ catch
       end
     end
   end
-
   % remove blacklisted images
   fprintf('Remove %d blacklisted images\n', sum(imdb.is_blacklisted));
   keep = ~imdb.is_blacklisted;
