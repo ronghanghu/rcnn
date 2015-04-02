@@ -13,3 +13,4 @@ cachedir/*
 external/caffe
 imdb/data-splits/det_lists/split*
 temp*
+*~
