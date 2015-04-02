@@ -30,8 +30,8 @@ catch
   
   % no bounding box for ImageNET 10K CLS
   % the directories are specified in im_list files
-  im_path.train   = root_dir;
-  im_path.test    = root_dir;
+  im_path.train   = fullfile(root_dir, 'train');
+  im_path.test    = fullfile(root_dir, 'test');
   im_list.train   = fullfile(root_dir, 'llc_10k-100-train.txt');
   im_list.test    = fullfile(root_dir, 'llc_10k-50-test.txt');
   
