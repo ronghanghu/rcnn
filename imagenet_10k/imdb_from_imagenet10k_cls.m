@@ -49,7 +49,7 @@ catch
   [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
   
   % all classes are present
-  imdb.classes = {meta_det.synsets(1:NUM_CLS).words};
+  imdb.classes = {meta_det.synsets_7k(1:NUM_CLS).words};
   imdb.num_classes = length(imdb.classes);
   imdb.class_to_id = ...
     containers.Map(imdb.classes, 1:imdb.num_classes);
