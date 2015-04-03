@@ -70,7 +70,7 @@ w = im_size(2);
 box_whole_im = [1 1 w h];
 
 rec.gt = true;
-rec.overlap = zeros(1, num_classes, 'single');
+rec.overlap = zeros(1, num_classes);
 rec.overlap(1, num_classes) = 1;
 rec.overlap = sparse(rec.overlap);
 rec.boxes = single(box_whole_im);
