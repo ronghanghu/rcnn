@@ -39,7 +39,7 @@ catch
   % devkit_path     = '';
   meta_det        = load('./external/mhex_graph/+imagenet/meta_7k.mat');
   
-  imdb.name = ['imagenet10k_loc_' image_set];
+  imdb.name = ['imagenet10k_cls_' image_set];
   imdb.extension = 'jpg';
   % no blacklist
   % is_blacklisted = containers.Map;
