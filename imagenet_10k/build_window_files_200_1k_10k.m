@@ -60,7 +60,7 @@ out_dir = '../';
 
 % load 200 imdb
 load imdb/cache/all_ilsvrc.mat;
-imdb_ilsvrc13_det = [imdb_ilsvrc_val1 imdb_ilsvrc_val2 imdb_ilsvrc_train];
+imdb_ilsvrc13_det = [imdb_ilsvrc_val1 imdb_ilsvrc_train];
 
 % load 1k imdb
 imdb_ilsvrc12_loc = load('imdb/cache/imdb_ilsvrc12_loc_train.mat');
