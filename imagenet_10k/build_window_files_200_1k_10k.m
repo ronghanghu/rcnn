@@ -74,8 +74,8 @@ assert(strcmp(imdb_imagenet10k_cls.name, 'imagenet10k_cls_train'));
 
 % write 200 window file
 num_to_sample = 1000;
-map_label = true(202, 1);
-whole_im = false(202, 1);
+map_label = true(201, 1);
+whole_im = false(201, 1);
 ending_index = rcnn_make_mapped_window_file(imdb_ilsvrc13_det, out_dir, ...
     'mapped_200_to_10k', ...
     num_to_sample, map_label, whole_im, map_vec_200_to_10k, 0);
