@@ -28,7 +28,7 @@ catch
   roidb.name = imdb.name;
   wnid2label_map = ...
     containers.Map({imdb.details.meta_det.synsets_7k.WNID}, ...
-    1:length(imdb.details.meta_det.synsets));
+    1:length(imdb.details.meta_det.synsets_7k));
   
   num_classes = length(imdb.details.meta_det.synsets);
   roidb.details.wnid2label_map = wnid2label_map;

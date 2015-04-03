@@ -31,7 +31,7 @@ catch
   roidb.name = imdb.name;
   roidb.details.wnid2label_map = ...
       containers.Map({imdb.details.meta_det.synsets_3k.WNID}, ...
-      1:length(imdb.details.meta_det.synsets));
+      1:length(imdb.details.meta_det.synsets_3k));
 
 %   is_train = false;
 %   match = regexp(roidb.name, 'ilsvrc13_train_pos_(?<class_num>\d+)', 'names');
