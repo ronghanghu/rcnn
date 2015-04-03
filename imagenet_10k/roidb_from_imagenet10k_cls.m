@@ -30,7 +30,7 @@ catch
     containers.Map({imdb.details.meta_det.synsets_7k.WNID}, ...
     1:length(imdb.details.meta_det.synsets_7k));
   
-  num_classes = length(imdb.details.meta_det.synsets);
+  num_classes = length(imdb.details.meta_det.synsets_7k);
   roidb.details.wnid2label_map = wnid2label_map;
 
   for i = 1:length(imdb.image_ids)

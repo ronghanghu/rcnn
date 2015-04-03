@@ -53,7 +53,7 @@ catch
     regions.boxes = cell(length(imdb.image_ids), 1);
 %   end
 
-  hash = make_hash(imdb.details.meta_det.synsets);
+  hash = make_hash(imdb.details.meta_det.synsets_3k);
 
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
@@ -89,7 +89,7 @@ function rec = attach_proposals(ilsvrc_rec, boxes, WNID, wnid2label_map, anno_fi
 % ------------------------------------------------------------------------
 
 % num_classes = 200;
-num_classes = 1000;
+num_classes = 10447;
 assert(isempty(boxes));
 
 % change selective search order from [y1 x1 y2 x2] to [x1 y1 x2 y2]
