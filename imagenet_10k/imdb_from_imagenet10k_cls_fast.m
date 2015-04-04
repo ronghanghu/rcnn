@@ -22,7 +22,7 @@ function imdb = imdb_from_imagenet10k_cls_fast(root_dir, image_set)
 %imdb.eval_func = pointer to the function that evaluates detections
 %imdb.roidb_func = pointer to the function that returns regions of interest
 
-cache_file = ['./imdb/cache/imdb_imagenet10k_cls_' image_set '_fast'];
+cache_file = ['./imdb/cache/imdb_imagenet10k_cls_' image_set];
 try
   load(cache_file);
 catch
@@ -47,8 +47,18 @@ catch
   IM_LENGTH = 256;
   
   imdb.image_dir = im_path.(image_set);
-  imdb.details.image_list_file = im_list.(image_set);
-  [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
+%   imdb.details.image_list_file = im_list.(image_set);
+%   [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
+  iminfo_all = dir([imdb.image_dir '*.' imdb.extension]);
+  % keep those valid images and remove extension
+  keep = false(length(iminfo_all), 1);
+  for n = 1:length(iminfo_all)
+    iminfo_all(n).name = iminfo_all(n).name(1:end-4);
+    keep(n) = (iminfo_all(n).bytes > 0);
+  end
+  iminfo_all = iminfo_all(keep);
+  
+  imdb.image_ids = {iminfo_all.name};
   
   % all classes are present
   imdb.classes = {meta_det.synsets_7k(1:NUM_CLS).words};
@@ -75,16 +85,10 @@ catch
   % Some images are blacklisted due to noisy annotations
   imdb.is_blacklisted = false(length(imdb.image_ids), 1);
   
+  % size set length to resized ones
   imdb.sizes = IM_LENGTH * ones(length(imdb.image_ids), 2);
 
   fprintf('Saving imdb to cache...');
   save(cache_file, 'imdb', '-v7.3');
   fprintf('done\n');
 end
-
-
-% ------------------------------------------------------------------------
-function wnid = get_wnid(image_id)
-% ------------------------------------------------------------------------
-ind = strfind(image_id, '_');
-wnid = image_id(1:ind-1);
