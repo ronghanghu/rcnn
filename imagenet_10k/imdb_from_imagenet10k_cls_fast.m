@@ -49,7 +49,7 @@ catch
   imdb.image_dir = im_path.(image_set);
 %   imdb.details.image_list_file = im_list.(image_set);
 %   [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
-  iminfo_all = dir([imdb.image_dir '*.' imdb.extension]);
+  iminfo_all = dir([imdb.image_dir '/*.' imdb.extension]);
   % keep those valid images and remove extension
   keep = false(length(iminfo_all), 1);
   for n = 1:length(iminfo_all)
