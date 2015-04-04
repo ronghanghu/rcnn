@@ -44,7 +44,7 @@ catch
   meta_det        = load('./external/mhex_graph/+imagenet/meta_7k.mat');
   
   imdb.name = ['imagenet3k_loc_' image_set];
-  imdb.extension = 'jpg';
+  imdb.extension = 'JPEG';
   % no blacklist
   % is_blacklisted = containers.Map;
   

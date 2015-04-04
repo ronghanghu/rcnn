@@ -68,7 +68,7 @@ catch
   % imdb.details.devkit_path = devkit_path;
   
   % VOC specific functions for evaluation and region of interest DB
-  imdb.roidb_func = @roidb_from_imagenet10k_loc;
+  imdb.roidb_func = @roidb_from_imagenet10k_cls;
   
   % Some images are blacklisted due to noisy annotations
   imdb.is_blacklisted = false(length(imdb.image_ids), 1);
