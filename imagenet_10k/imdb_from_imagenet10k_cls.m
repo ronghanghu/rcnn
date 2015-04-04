@@ -98,7 +98,7 @@ catch
   % remove blacklisted images
   fprintf('Remove %d blacklisted images\n', sum(imdb.is_blacklisted));
   keep = ~imdb.is_blacklisted;
-  imdb.image_ids(keep);
+  imdb.image_ids = imdb.image_ids(keep);
   imdb.sizes = imdb.sizes(keep, :);
   imdb.is_blacklisted = false(length(imdb.image_ids), 1);
 
