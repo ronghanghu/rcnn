@@ -43,8 +43,6 @@ catch
       WNID = get_wnid(imdb.image_ids{i});
       anno_file = fullfile(imdb.details.bbox_path, ...
           WNID, [imdb.image_ids{i} '.xml']);
-    elseif is_test
-      anno_file = [];
     else
       anno_file = fullfile(imdb.details.bbox_path, ...
           [imdb.image_ids{i} '.xml']);
