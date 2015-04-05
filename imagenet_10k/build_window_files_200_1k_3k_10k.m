@@ -60,21 +60,26 @@ map_vec_10k_to_10k = [0; map_vec_10k_to_10k];
 % create 200 & 1k & 10k window files
 
 % load 200 imdb
-fprintf('loading imdbs... (this may take a while)');
+fprintf('loading imdbs (this may take a while)...');
 imdb_ilsvrc_val1 = imdb_from_ilsvrc13('./datasets/ILSVRC13', 'val1');
+fprintf('.');
 for n = 1:200
   imdb_ilsvrc_train(n, 1) = imdb_from_ilsvrc13('./datasets/ILSVRC13', ...
     ['train_pos_' num2str(n)]);
+  fprintf('.');
 end
 % load 1k imdb
 imdb_ilsvrc12_loc = imdb_from_ilsvrc12_loc('./datasets/ILSVRC13', 'train');
 assert(strcmp(imdb_ilsvrc12_loc.name, 'ilsvrc12_loc_train'));
+fprintf('.');
 % load 3k imdb
 imdb_imagenet3k_loc = imdb_from_imagenet3k_loc('./datasets/imagenet_3k', 'train');
 assert(strcmp(imdb_imagenet3k_loc.name, 'imagenet3k_loc_train'));
+fprintf('.');
 % load 10k imdb
 imdb_imagenet10k_cls = imdb_from_imagenet10k_cls('./datasets/imagenet_10k', 'train');
 assert(strcmp(imdb_imagenet10k_cls.name, 'imagenet10k_cls_train'));
+fprintf('.');
 fprintf('done\n');
 
 % concatenate all imdbs together
