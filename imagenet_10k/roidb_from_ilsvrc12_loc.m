@@ -117,7 +117,7 @@ num_boxes = size(boxes, 1);
 
 rec.gt = cat(1, true(num_gt_boxes, 1), false(num_boxes, 1));
 rec.is_difficult = false(num_gt_boxes + num_boxes, 1);
-rec.overlap = zeros(num_gt_boxes+num_boxes, num_classes, 'single');
+rec.overlap = zeros(num_gt_boxes+num_boxes, num_classes);
 for i = 1:num_gt_boxes
   rec.overlap(:, gt_classes(i)) = ...
       max(rec.overlap(:, gt_classes(i)), boxoverlap(all_boxes, gt_boxes(i, :)));
