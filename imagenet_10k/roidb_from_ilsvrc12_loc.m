@@ -39,8 +39,8 @@ catch
 
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
+    WNID = get_wnid(imdb.image_ids{i});
     if is_train
-      WNID = get_wnid(imdb.image_ids{i});
       anno_file = fullfile(imdb.details.bbox_path, ...
           WNID, [imdb.image_ids{i} '.xml']);
     else

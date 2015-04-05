@@ -69,6 +69,7 @@ catch
   imdb.details.meta_det    = meta_det;
   imdb.details.root_dir    = root_dir;
   imdb.details.devkit_path = devkit_path;
+  imdb.details.bbox_path   = bbox_path.(image_set);
   
   % VOC specific functions for evaluation and region of interest DB
   imdb.roidb_func = @roidb_from_ilsvrc12_loc;
