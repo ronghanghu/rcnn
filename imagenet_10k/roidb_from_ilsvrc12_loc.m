@@ -22,7 +22,6 @@ function roidb = roidb_from_ilsvrc12_loc(imdb)
 % ---------------------------------------------------------
 
 cache_file = ['./imdb/cache/roidb_' imdb.name];
-diary(['./imdb/cache/roidb_' imdb.name '.log'])
 try
   load(cache_file);
 catch
@@ -30,43 +29,26 @@ catch
 
   roidb.name = imdb.name;
   roidb.details.wnid2label_map = ...
-      containers.Map({imdb.details.meta_det.synsets.WNID}, ...
-      1:length(imdb.details.meta_det.synsets));
-
-%   is_train = false;
-%   match = regexp(roidb.name, 'ilsvrc13_train_pos_(?<class_num>\d+)', 'names');
-%   if ~isempty(match)
-%     is_train = true;
-%   end
-%   is_test = false;
-%   if strcmp(roidb.name, 'ilsvrc13_test');
-%     is_test = true;
-%   end
-
-%   regions_file = fullfile('data', 'selective_search_data', [roidb.name '.mat']);
-%   if exist(regions_file, 'file') ~= 0
-%     fprintf('Loading region proposals...');
-%     regions = load(regions_file);
-%     fprintf('done\n');
-%   else
-%     warning('no region file');
-    regions.boxes = cell(length(imdb.image_ids), 1);
-%   end
+    containers.Map({imdb.details.meta_det.synsets.WNID}, ...
+    1:length(imdb.details.meta_det.synsets));
+  
+  is_train = strcmp(imdb.name, 'ilsvrc12_loc_train');
+  regions.boxes = cell(length(imdb.image_ids), 1);
 
   hash = make_hash(imdb.details.meta_det.synsets);
 
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
-%     if is_train
+    if is_train
       WNID = get_wnid(imdb.image_ids{i});
       anno_file = fullfile(imdb.details.bbox_path, ...
           WNID, [imdb.image_ids{i} '.xml']);
-%     elseif is_test
-%       anno_file = [];
-%     else
-%       anno_file = fullfile(imdb.details.bbox_path, ...
-%           [imdb.image_ids{i} '.xml']);
-%     end
+    elseif is_test
+      anno_file = [];
+    else
+      anno_file = fullfile(imdb.details.bbox_path, ...
+          [imdb.image_ids{i} '.xml']);
+    end
 
     try
       rec = VOCreadrecxml(anno_file, hash);
@@ -88,7 +70,6 @@ end
 function rec = attach_proposals(ilsvrc_rec, boxes, WNID, wnid2label_map, anno_file)
 % ------------------------------------------------------------------------
 
-% num_classes = 200;
 num_classes = 1000;
 assert(isempty(boxes));
 
@@ -114,7 +95,7 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
     try
       gt_classes = zeros(num_gt_boxes, 1);
       label = wnid2label_map(WNID);
-      assert(1 <= label && label <= 1000);
+      assert(1 <= label && label <= num_classes);
       gt_classes(:) = label;
     catch
       fprintf('serious issue occurred within image %s, please check\n', anno_file);

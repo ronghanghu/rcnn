@@ -44,9 +44,21 @@ catch
   % no blacklist
   % is_blacklisted = containers.Map;
   
+  IM_LENGTH = 256;
+  
   imdb.image_dir = im_path.(image_set);
-  imdb.details.image_list_file = im_list.(image_set);
-  [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
+%   imdb.details.image_list_file = im_list.(image_set);
+%   [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
+  iminfo_all = dir([imdb.image_dir '/*.' imdb.extension]);
+  % keep those valid images and remove extension
+  keep = false(length(iminfo_all), 1);
+  for n = 1:length(iminfo_all)
+    iminfo_all(n).name = iminfo_all(n).name(1:end-4);
+    keep(n) = (iminfo_all(n).bytes > 0);
+  end
+  iminfo_all = iminfo_all(keep);
+  
+  imdb.image_ids = {iminfo_all.name};
   
   % all classes are present
   imdb.classes = {meta_det.synsets_7k(1:NUM_CLS).words};
@@ -73,43 +85,10 @@ catch
   % Some images are blacklisted due to noisy annotations
   imdb.is_blacklisted = false(length(imdb.image_ids), 1);
   
-  for i = 1:length(imdb.image_ids)
-    tic_toc_print('imdb (%s): %d/%d\n', imdb.name, i, length(imdb.image_ids));
-    try
-      im = imread(imdb.image_at(i));
-      imdb.sizes(i, :) = [size(im, 1) size(im, 2)];
-    catch
-      lerr = lasterror;
-      % gah, annoying data issues
-      if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')   
-        warning('reading %s using imfinfo', imdb.image_at(i));
-        info = imfinfo(imdb.image_at(i));
-        assert(isscalar(info.Height) && info.Height > 0);
-        assert(isscalar(info.Width) && info.Width > 0);
-        imdb.sizes(i, :) = [info.Height info.Width];
-      else
-        warning(lerr.message);
-        warning(imdb.image_at(i));
-        % blacklist error images (for removal)
-        imdb.is_blacklisted(i) = true;
-      end
-    end
-  end
-  % remove blacklisted images
-  fprintf('Remove %d blacklisted images\n', sum(imdb.is_blacklisted));
-  keep = ~imdb.is_blacklisted;
-  imdb.image_ids = imdb.image_ids(keep);
-  imdb.sizes = imdb.sizes(keep, :);
-  imdb.is_blacklisted = false(length(imdb.image_ids), 1);
+  % size set length to resized ones
+  imdb.sizes = IM_LENGTH * ones(length(imdb.image_ids), 2);
 
   fprintf('Saving imdb to cache...');
   save(cache_file, 'imdb', '-v7.3');
   fprintf('done\n');
 end
-
-
-% ------------------------------------------------------------------------
-function wnid = get_wnid(image_id)
-% ------------------------------------------------------------------------
-ind = strfind(image_id, '_');
-wnid = image_id(1:ind-1);

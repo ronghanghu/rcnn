@@ -2,11 +2,19 @@
 % For those classes that are in ImageNET 200 or ImageNET 1K, use bounding
 % box. For other classes, use the whole image
 
+% output directory
+output_dir = '/home/ronghang/imagenet_10k_window_files';
+if exist(output_dir, 'dir') == 0
+  error('output directory %s does not exist', output_dir);
+end
+fprintf('building window files to directory %s\n', output_dir);
+
+%% -----------------------------------------------------------------------------
+% create map vector for 200 and 1k
 load external/mhex_graph/+imagenet/meta_7k.mat;
 load external/mhex_graph/+imagenet/meta_1k.mat;
 load external/mhex_graph/+imagenet/meta_200.mat;
 
-%% create map vector for 200 and 1k
 map_vec_200_to_10k = zeros(200, 1);
 for v = 1:200
   WNID = synsets_200(v).WNID;
@@ -17,6 +25,7 @@ for v = 1:200
   end
   map_vec_200_to_10k(v) = label;
 end
+% insert background at beginning
 map_vec_200_to_10k = [0; map_vec_200_to_10k];
 
 map_vec_1k_to_10k = zeros(1000, 1);
@@ -29,70 +38,70 @@ for v = 1:1000
   end
   map_vec_1k_to_10k(v) = label;
 end
+% insert background at beginning
 map_vec_1k_to_10k = [0; map_vec_1k_to_10k];
 
-%% create 10k map vec
+%% -----------------------------------------------------------------------------
+% create 10k map vec (remove those classes existing in 200 or 1k)
 % find 10k classes that are not in 200 or 1K, and create an image list of
-% them
+% them. i.e. we only use whole image for a class when there is no bounding
+% box available
+
+% Note: those overlapping with 3k are still kept
 class_num_10k = length(synsets_7k);
-is_in_200_or_1k = true(class_num_10k, 1);
-for v = 1:class_num_10k
-  WNID = synsets_7k(v).WNID;
-  try
-    wnid2label_200(WNID);
-    wnid2label_1k(WNID);
-    is_in_200_or_1k(v) = true;
-  catch err_msg
-    if strcmp(err_msg.identifier, 'MATLAB:Containers:Map:NoKey')
-      is_in_200_or_1k(v) = false;
-    else
-      error(err_msg);
-    end
-  end
-end
+is_in_200_or_1k = ...
+  wnid2label_200.isKey({synsets_7k.WNID}) | ...
+  wnid2label_1k.isKey({synsets_7k.WNID});
 map_vec_10k_to_10k = (1:class_num_10k)';
 map_vec_10k_to_10k(is_in_200_or_1k) = -1;
+
+% insert background at beginning
 map_vec_10k_to_10k = [0; map_vec_10k_to_10k];
 
-%% create 200 & 1k window files
-
-out_dir = '../';
+%% -----------------------------------------------------------------------------
+% create 200 & 1k & 10k window files
 
 % load 200 imdb
-load imdb/cache/all_ilsvrc.mat;
-imdb_ilsvrc13_det = [imdb_ilsvrc_val1 imdb_ilsvrc_train];
-
+fprintf('loading imdbs... (this may take a while)');
+imdb_ilsvrc_val1 = imdb_from_ilsvrc13('./datasets/ILSVRC13', 'val1');
+imdb_ilsvrc_train = struct([]);
+for n = 1:200
+  imdb_ilsvrc_train(n, 1) = imdb_from_ilsvrc13('./datasets/ILSVRC13', ...
+    ['train_pos_' num2str(n)]);
+end
 % load 1k imdb
-imdb_ilsvrc12_loc = load('imdb/cache/imdb_ilsvrc12_loc_train.mat');
-imdb_ilsvrc12_loc = imdb_ilsvrc12_loc.imdb;
+imdb_ilsvrc12_loc = imdb_from_ilsvrc12_loc('./datasets/ILSVRC13', 'train');
 assert(strcmp(imdb_ilsvrc12_loc.name, 'ilsvrc12_loc_train'));
-
 % load 10k imdb
-imdb_imagenet10k_cls = load('imdb/cache/imdb_imagenet10k_cls_train.mat');
-imdb_imagenet10k_cls = imdb_imagenet10k_cls.imdb;
+imdb_imagenet10k_cls = imdb_from_imagenet10k_cls('./datasets/imagenet_10k', 'train');
 assert(strcmp(imdb_imagenet10k_cls.name, 'imagenet10k_cls_train'));
+fprintf('done\n');
 
-% write 200 window file
+% concatenate all imdbs together
+imdb_all = [
+  imdb_ilsvrc_val1 % ImageNET 200 val1 (1 imdb)
+  imdb_ilsvrc_train % ImageNET 200 train (200 imdbs)
+  imdb_ilsvrc12_loc % ImageNET 1K train (1 imdb)
+  imdb_imagenet10k_cls % ImageNET 10K train (imdb)
+]';
+
+% set up label mapping
+label_map_flag = [
+  true
+  true(200, 1)
+  true
+  true
+];
+
+label_map_cell = [
+  repmat({map_vec_200_to_10k}, 1+200, 1)
+  {map_vec_1k_to_10k; map_vec_10k_to_10k}
+];
+
+% set to 1000 as in rcnn. it only affects imagenet 200 train
 num_to_sample = 1000;
-map_label = true(201, 1);
-whole_im = false(201, 1);
-ending_index = rcnn_make_mapped_window_file(imdb_ilsvrc13_det, out_dir, ...
-    'mapped_200_to_10k', ...
-    num_to_sample, map_label, whole_im, map_vec_200_to_10k, 0);
-disp(ending_index);
 
-% write 1k window file
-map_label = true;
-whole_im = false;
-ending_index = rcnn_make_mapped_window_file(imdb_ilsvrc12_loc, out_dir, ...
-    'mapped_1k_to_10k', ...
-    num_to_sample, map_label, whole_im, map_vec_1k_to_10k, ending_index);
-disp(ending_index);
-
-% write 10k window file
-map_label = true;
-whole_im = false;
-ending_index = rcnn_make_mapped_window_file(imdb_imagenet10k_cls, out_dir, ...
-    'mapped_10k_to_10k', ...
-    num_to_sample, map_label, whole_im, map_vec_10k_to_10k, ending_index);
-disp(ending_index);
+% write window file
+rcnn_make_window_file_map_labels(imdb_all, out_dir, ...
+    'mapped_200_1k_10k_to_10k', ...
+    label_map_flag, label_map_cell);
