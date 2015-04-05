@@ -64,7 +64,6 @@ map_vec_10k_to_10k = [0; map_vec_10k_to_10k];
 % load 200 imdb
 fprintf('loading imdbs... (this may take a while)');
 imdb_ilsvrc_val1 = imdb_from_ilsvrc13('./datasets/ILSVRC13', 'val1');
-imdb_ilsvrc_train = struct([]);
 for n = 1:200
   imdb_ilsvrc_train(n, 1) = imdb_from_ilsvrc13('./datasets/ILSVRC13', ...
     ['train_pos_' num2str(n)]);
