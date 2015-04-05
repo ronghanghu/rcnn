@@ -81,10 +81,13 @@ fprintf('.');
 fprintf('done\n');
 
 % concatenate all imdbs together
+imdb_ilsvrc_val1 = rmfield(imdb_ilsvrc_val1, 'eval_func');
+imdb_ilsvrc_train = rmfield(imdb_ilsvrc_train, 'eval_func');
 imdb_all = [
   imdb_ilsvrc_val1 % ImageNET 200 val1 (1 imdb)
   imdb_ilsvrc_train % ImageNET 200 train (200 imdbs)
   imdb_ilsvrc12_loc % ImageNET 1K train (1 imdb)
+  imdb_imagenet3k_loc % ImageNET 3K train (1 imdb)
   imdb_imagenet10k_cls % ImageNET 10K train (imdb)
 ]';
 
@@ -105,6 +108,6 @@ label_map_cell = [
 num_to_sample = 1000;
 
 % write window file
-rcnn_make_window_file_map_labels(imdb_all, out_dir, ...
+rcnn_make_window_file_map_labels(imdb_all, output_dir, ...
     'mapped_200_1k_10k_to_10k', ...
     label_map_flag, label_map_cell);
