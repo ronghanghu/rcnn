@@ -33,12 +33,12 @@ catch
   
   roidb.name = imdb.name;
   roidb.details.wnid2label_map = ...
-    containers.Map({imdb.details.meta_det.synsets_3k.WNID}, ...
-    1:length(imdb.details.meta_det.synsets_3k));
+    containers.Map({imdb.details.meta_det.synsets_7k.WNID}, ...
+    1:length(imdb.details.meta_det.synsets_7k));
   
   regions.boxes = cell(length(imdb.image_ids), 1);
   
-  hash = make_hash(imdb.details.meta_det.synsets_3k);
+  hash = make_hash(imdb.details.meta_det.synsets_7k);
 
   for i = 1:length(imdb.image_ids)
     tic_toc_print('roidb (%s): %d/%d\n', roidb.name, i, length(imdb.image_ids));
