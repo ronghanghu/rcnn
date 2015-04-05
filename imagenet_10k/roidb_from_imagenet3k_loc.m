@@ -81,7 +81,11 @@ end
 %         feat: [2108x9216 single]
 %        class: [2108x1 uint8]
 if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
-  keep_obj = wnid2label_map.isKey({ilsvrc_rec.class});
+  numobjects = length(ilsvrc_rec.objects);
+  keep_obj = true(numobjects, 1);
+  for n = 1:numobjects
+    keep_obj(n) = ~isempty(ilsvrc_rec.objects(n).label);
+  end
   gt_boxes = cat(1, ilsvrc_rec.objects(:).bbox);
   gt_boxes = gt_boxes(keep_obj, :);
   all_boxes = cat(1, gt_boxes, boxes);
