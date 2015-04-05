@@ -81,10 +81,13 @@ end
 %         feat: [2108x9216 single]
 %        class: [2108x1 uint8]
 if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
+  keep_obj = wnid2label_map.isKey({ilsvrc_rec.class});
   gt_boxes = cat(1, ilsvrc_rec.objects(:).bbox);
+  gt_boxes = gt_boxes(keep_obj, :);
   all_boxes = cat(1, gt_boxes, boxes);
   gt_classes = cat(1, ilsvrc_rec.objects(:).label);
   num_gt_boxes = size(gt_boxes, 1);
+  assert(num_gt_boxes == length(gt_classes));
   
   if isempty(gt_classes)
     % just assign image-level labels to each object box
@@ -97,13 +100,6 @@ if isfield(ilsvrc_rec, 'objects') && length(ilsvrc_rec.objects) > 0
       fprintf('serious issue occurred within image %s, please check\n', anno_file);
       keyboard
     end
-    % rec.gt = [];
-    % rec.is_difficult = [];
-    % rec.overlap = [];
-    % rec.boxes = [];
-    % rec.feat = [];
-    % rec.class = [];
-    % return
   end
 else
   gt_boxes = [];
