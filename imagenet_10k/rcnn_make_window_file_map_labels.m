@@ -1,5 +1,5 @@
 function rcnn_make_window_file_map_labels(imdb, out_dir, window_file_name, ...
-    num_to_sample, label_map_flag, label_map_cell)
+    num_to_sample, label_map_flag, label_map_cell, start_index)
 % IMPORTANT:
 % description for use_map_flag and label_map_cell
 %   use_map_flag: a length(imdb) * 1 logical array.
@@ -38,6 +38,9 @@ function rcnn_make_window_file_map_labels(imdb, out_dir, window_file_name, ...
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
+if ~exist('start_index', 'var')
+  start_index = 0;
+end
 assert(length(label_map_flag) == length(imdb));
 assert(length(label_map_cell) == length(imdb));
 
@@ -58,7 +61,7 @@ fid = fopen(window_file, 'wt');
 channels = 3; % three channel images
 
 skip = 0;
-image_index = 0;
+image_index = start_index;
 for ii = 1:length(imdb)
   % load label map and turn it into a column vector
   label_map = label_map_cell{ii};
