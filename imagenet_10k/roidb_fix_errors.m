@@ -1,9 +1,7 @@
 % fix roidb errors:
 %   remove all boxes that are outside the image
 
-function roidb = roidb_fix_errors(imdb)
-  roidb = imdb.roidb_func(imdb);
-  
+function roidb = roidb_fix_errors(roidb)
   % check every image and remove those bboxes outside the image
   wrong_bbox_count = 0;
   for i = 1:length(imdb.image_ids)

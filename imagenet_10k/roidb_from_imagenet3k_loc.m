@@ -52,6 +52,8 @@ catch
     end
     roidb.rois(i) = attach_proposals(rec, regions.boxes{i}, WNID, roidb.details.wnid2label_map, anno_file);
   end
+  % fix issues in roidb
+  roidb = roidb_fix_errors(roidb);
 
   rmpath(fullfile(devkit_path, 'evaluation')); 
 
@@ -59,7 +61,6 @@ catch
   save(cache_file, 'roidb', '-v7.3');
   fprintf('done\n');
 end
-
 
 % ------------------------------------------------------------------------
 function rec = attach_proposals(ilsvrc_rec, boxes, WNID, wnid2label_map, anno_file)
