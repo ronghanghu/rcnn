@@ -31,9 +31,11 @@ catch
   % no bounding box for ImageNET 10K CLS
   % the directories are specified in im_list files
   im_path.train   = fullfile(root_dir, 'train');
+  im_path.val     = fullfile(root_dir, 'val');
   im_path.test    = fullfile(root_dir, 'test');
-  im_list.train   = fullfile(root_dir, 'llc_10k-100-train.txt');
-  im_list.test    = fullfile(root_dir, 'llc_10k-50-test.txt');
+  im_list.train   = fullfile(root_dir, '10k_list_train.txt');
+  im_list.val     = fullfile(root_dir, '10k_list_val.txt');
+  im_list.test    = fullfile(root_dir, '10k_list_test.txt');
   
   % no devkit path
   % devkit_path     = '';
@@ -47,19 +49,19 @@ catch
   IM_LENGTH = 256;
   
   imdb.image_dir = im_path.(image_set);
-%   imdb.details.image_list_file = im_list.(image_set);
-%   [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
-  iminfo_all = dir([imdb.image_dir '/*.' imdb.extension]);
+  imdb.details.image_list_file = im_list.(image_set);
+  [imdb.image_ids, ~] = textread(imdb.details.image_list_file, '%s %d');
+%   iminfo_all = dir([imdb.image_dir '/*.' imdb.extension]);
   % keep those valid images and remove extension
-  keep = false(length(iminfo_all), 1);
-  for n = 1:length(iminfo_all)
-    iminfo_all(n).name = iminfo_all(n).name(1:end-4);
-    keep(n) = (iminfo_all(n).bytes > 0);
-  end
-  iminfo_all = iminfo_all(keep);
+%   keep = false(length(iminfo_all), 1);
+%   for n = 1:length(iminfo_all)
+%     iminfo_all(n).name = iminfo_all(n).name(1:end-4);
+%     keep(n) = (iminfo_all(n).bytes > 0);
+%   end
+%   iminfo_all = iminfo_all(keep);
   
-  imdb.image_ids = {iminfo_all.name};
-  
+%   imdb.image_ids = {iminfo_all.name};
+
   % all classes are present
   imdb.classes = {meta_det.synsets_7k(1:NUM_CLS).words};
   imdb.num_classes = length(imdb.classes);
