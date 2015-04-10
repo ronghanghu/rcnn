@@ -53,7 +53,7 @@ catch
     roidb.rois(i) = attach_proposals(rec, regions.boxes{i}, WNID, roidb.details.wnid2label_map, anno_file);
   end
   % fix issues in roidb
-  roidb = roidb_fix_errors(roidb);
+  roidb = roidb_fix_errors(imdb, roidb);
 
   rmpath(fullfile(devkit_path, 'evaluation')); 
 
