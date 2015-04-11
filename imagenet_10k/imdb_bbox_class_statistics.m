@@ -9,6 +9,7 @@ for ii = 1:length(imdb)
   assert(length(roidb.rois) == length(imdb(ii).image_ids));
   for i = 1:length(roidb.rois)
     class_labels = roidb.rois(i).class;
+    class_labels = class_labels(class_labels > 0);
     bbox_num_per_cls(class_labels) = bbox_num_per_cls(class_labels) + 1;
   end
 end
