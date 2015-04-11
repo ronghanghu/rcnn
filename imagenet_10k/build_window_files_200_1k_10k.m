@@ -87,7 +87,6 @@ imdb_all = [
   imdb_ilsvrc_val1 % ImageNET 200 val1 (1 imdb)
   imdb_ilsvrc_train % ImageNET 200 train (200 imdbs)
   imdb_ilsvrc12_loc % ImageNET 1K train (1 imdb)
-  imdb_imagenet3k_loc % ImageNET 3K train (1 imdb)
   imdb_imagenet10k_cls % ImageNET 10K train (imdb)
 ]';
 
