@@ -10,10 +10,10 @@ end
 fprintf('done\n');
 
 fprintf('running statistics...');
-[~, stat_200_val1] = imdb_bbox_class_statistics(imdb_ilsvrc_val1);
-[~, stat_200_train] = imdb_bbox_class_statistics(imdb_ilsvrc_train);
-stat_200_train = min(stat_200_train, 1000); % at most 1000 per class
-stat_200 = stat_200_val1 + stat_200_train;
+stat_200_val1 = imdb_bbox_class_statistics(imdb_ilsvrc_val1, 200);
+stat_200_train = imdb_bbox_class_statistics(imdb_ilsvrc_train, 200);
+% at most 1000 per class
+stat_200 = stat_200_val1 + min(stat_200_train, 1000);
 fprintf('done\n');
 clear imdb_ilsvrc_val1 imdb_ilsvrc_train n;
 
@@ -23,7 +23,7 @@ imdb_ilsvrc12_loc = imdb_from_ilsvrc12_loc('./datasets/ILSVRC13', 'train');
 assert(strcmp(imdb_ilsvrc12_loc.name, 'ilsvrc12_loc_train'));
 fprintf('done\n');
 fprintf('running statistics...');
-[~, stat_1k] = imdb_bbox_class_statistics(imdb_ilsvrc12_loc);
+stat_1k = imdb_bbox_class_statistics(imdb_ilsvrc12_loc, 1000);
 fprintf('done\n');
 clear imdb_ilsvrc12_loc;
 
@@ -33,7 +33,7 @@ imdb_imagenet3k_loc = imdb_from_imagenet3k_loc('./datasets/imagenet_3k', 'train'
 assert(strcmp(imdb_imagenet3k_loc.name, 'imagenet3k_loc_train'));
 fprintf('done\n');
 fprintf('running statistics...');
-[~, stat_3k] = imdb_bbox_class_statistics(imdb_imagenet3k_loc);
+stat_3k = imdb_bbox_class_statistics(imdb_imagenet3k_loc, 10447);
 fprintf('done\n');
 clear imdb_imagenet3k_loc;
 
@@ -44,7 +44,7 @@ assert(strcmp(imdb_imagenet10k_cls.name, 'imagenet10k_cls_train'));
 fprintf('done\n');
 
 fprintf('running statistics...');
-[~, stat_10k] = imdb_bbox_class_statistics(imdb_imagenet10k_cls);
+stat_10k = imdb_bbox_class_statistics(imdb_imagenet10k_cls, 10447);
 fprintf('done\n');
 clear imdb_imagenet10k_cls;
 

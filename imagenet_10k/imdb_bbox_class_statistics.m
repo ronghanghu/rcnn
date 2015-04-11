@@ -1,7 +1,5 @@
-function [classes, bbox_num_per_cls] = imdb_bbox_class_statistics(imdb)
+function bbox_num_per_cls = imdb_bbox_class_statistics(imdb, numclasses)
 
-classes = imdb(1).classes;
-numclasses = length(classes);
 bbox_num_per_cls = zeros(numclasses, 1);
 
 for ii = 1:length(imdb)
@@ -9,8 +7,12 @@ for ii = 1:length(imdb)
   assert(length(roidb.rois) == length(imdb(ii).image_ids));
   for i = 1:length(roidb.rois)
     class_labels = roidb.rois(i).class;
-    class_labels = class_labels(class_labels > 0);
-    bbox_num_per_cls(class_labels) = bbox_num_per_cls(class_labels) + 1;
+    gt = roidb.rois(i).gt;
+    class_labels = class_labels(gt);
+    for n = 1:length(class_labels)
+      label = class_labels(n);
+      bbox_num_per_cls(label) = bbox_num_per_cls(label) + 1;
+    end
   end
 end
 
