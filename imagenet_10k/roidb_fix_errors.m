@@ -26,6 +26,9 @@ function roidb = roidb_fix_errors(imdb, roidb)
       roi.feat = roi.feat(valid, :);
     end
     roi.class = roi.class(valid, :);
+    
+    roidb.rois(i) = roi;
   end
+  assert(length(roidb.rois) == length(imdb.image_ids));
   fprintf('removed %d wrong boxes in roidb %s\n', wrong_bbox_count, imdb.name);
 end
