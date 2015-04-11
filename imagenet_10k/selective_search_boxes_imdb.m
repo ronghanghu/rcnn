@@ -16,9 +16,10 @@ fast_mode = true;
 mean_num = 0;
 mean_time = 0;
 
-result = cell(length(imdb.image_ids), 1);
-for i = 1:length(imdb.image_ids)
-  fprintf('%d/%d (%s) ...', i, last_el, imdb.image_ids{i});
+numimages = length(imdb.image_ids);
+result = cell(numimages, 1);
+for i = 1:numimages
+  fprintf('%d/%d (%s) ...', i, numimages, imdb.image_ids{i});
   try
     im = imread(imdb.image_at(i));
   catch lerr
