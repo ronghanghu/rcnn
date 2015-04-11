@@ -9,24 +9,36 @@ function [images, boxes] = selective_search_boxes_imdb(imdb)
 % this file (or any portion of it) in your project.
 % ---------------------------------------------------------
 
-fast_mode = true;
-
-% % ------------------------------------------------------------------------
-% % distributed computing configurations
-% addpath(genpath('rootdir/simple-cluster-lib'));
-% dconf                 = simple_cluster_lib_config();
-% dconf.cd              = pwd();
-% dconf.local           = false;
-% dconf.dist_nodes      = 40;
-% dconf.hours           = 12;
-% dconf.cput            = 60*60*24;
-% dconf.cleanup         = false;
-% %dconf.resume = true;
-% %dconf.work_dir_suffix = [testset '_' year];
-% % ------------------------------------------------------------------------
+images = imdb.image_ids;
 
 im_width = 500;
-boxes = op_selective_search_boxes(1, length(imdb.image_ids), imdb, im_width);
-% mimic selective search output variable names
+fast_mode = true;
+mean_num = 0;
+mean_time = 0;
 
-images = imdb.image_ids;
+result = cell(length(imdb.image_ids), 1);
+for i = 1:length(imdb.image_ids)
+  fprintf('%d/%d (%s) ...', i, last_el, imdb.image_ids{i});
+  try
+    im = imread(imdb.image_at(i));
+  catch lerr
+    if strcmp(lerr.identifier, 'MATLAB:imagesci:jpg:cmykColorSpace')
+      result{i} = [];
+    else
+      warning(lerr.message);
+    end
+    result{i} = [];
+  end
+  % convert gray-scale image to color image
+  if size(im, 3) == 1
+    im = repmat(im, [1, 1, 3]);
+  end
+  th = tic();
+  result{i} = selective_search_boxes(im, fast_mode, im_width);
+  t = toc(th);
+
+  mean_num = (mean_num * (i-1) + size(result{i}, 1))/i;
+  mean_time = (mean_time * (i-1) + t)/i;
+  fprintf('%.2fs...%d boxes (means: %.2fs %.1f boxes)\n', t, ...
+      size(result{i}, 1), mean_time, mean_num);
+end
