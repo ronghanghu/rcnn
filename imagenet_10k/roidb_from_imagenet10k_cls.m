@@ -75,7 +75,7 @@ rec.overlap(1, num_classes) = 1;
 rec.overlap = sparse(rec.overlap);
 rec.boxes = single(box_whole_im);
 rec.feat = [];
-rec.class = uint8(class_id);
+rec.class = class_id;
 
 
 % ------------------------------------------------------------------------

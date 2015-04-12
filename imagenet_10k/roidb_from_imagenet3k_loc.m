@@ -124,7 +124,7 @@ end
 rec.overlap = sparse(rec.overlap);
 rec.boxes = single(all_boxes);
 rec.feat = [];
-rec.class = uint8(cat(1, gt_classes, zeros(num_boxes, 1)));
+rec.class = cat(1, gt_classes, zeros(num_boxes, 1));
 
 
 % ------------------------------------------------------------------------
