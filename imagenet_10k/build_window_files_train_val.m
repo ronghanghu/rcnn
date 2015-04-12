@@ -105,6 +105,9 @@ else
   label_map_flag_val = [true; true; false];
   label_map_cell_val = {map_vec_200_to_10k; map_vec_1k_to_10k; []};
   
+  % set to 1000 as in rcnn. it only affects imagenet 200 train
+  num_to_sample = 1000;
+  
   rcnn_make_window_file_map_labels(imdb_all_val, output_dir, ...
     'mapped_200_1k_3k_to_10k_val', num_to_sample, ...
     label_map_flag_val, label_map_cell_val);
