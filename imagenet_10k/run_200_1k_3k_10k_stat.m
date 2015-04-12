@@ -48,5 +48,31 @@ stat_10k = imdb_bbox_class_statistics(imdb_imagenet10k_cls, 10447);
 fprintf('done\n');
 clear imdb_imagenet10k_cls;
 
+%% post-process data
+load external/mhex_graph/+imagenet/meta_extended.mat;
+stat_all_loc = zeros(size(synsets_extended));
+stat_all_cls = zeros(size(synsets_extended));
+for n = 1:length(synsets_extended)
+  imagenet_200_id = synsets_extended(n).imagenet_200_id;
+  imagenet_1k_id = synsets_extended(n).imagenet_1k_id;
+  imagenet_10k_id = synsets_extended(n).imagenet_10k_id;
+  % add 200
+  if ~isempty(imagenet_200_id)
+    stat_all_loc(n) = stat_all_loc(n) + stat_200(imagenet_200_id);
+  end
+  % add 1k
+  if ~isempty(imagenet_1k_id)
+    stat_all_loc(n) = stat_all_loc(n) + stat_1k(imagenet_1k_id);
+  end
+  % add 3k and 10k
+  if ~isempty(imagenet_10k_id)
+    stat_all_loc(n) = stat_all_loc(n) + stat_3k(imagenet_10k_id);
+    stat_all_cls(n) = stat_all_cls(n) + stat_10k(imagenet_10k_id);
+  end
+end
+stat_all = stat_all_cls + stat_all_loc;
+clear synsets_extended wnid2label_extended ...
+  imagenet_200_id imagenet_1k_id imagenet_10k_id n
+
 %% save results
 save statistics.mat -v7.3
