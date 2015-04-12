@@ -1,39 +1,36 @@
 % the quick hacky code to append 10K window files to an existing window file
 
 % existing window file
-window_file_name = '../window_file_mapped_10k_to_10k_hack.txt';
+window_file_name = '../window_file_mapped_10k_to_10k_train.txt';
 % starting image index in window file
-start_index = 635067;
+start_index = % change to your start index % ;
+
+image_dir = './datasets/imagenet_10k/train';
+image_list_file = './datasets/imagenet_10k/10k_list_train.txt';
 
 %% -----------------------------------------------------------------------------
 
-load external/mhex_graph/+imagenet/meta_7k.mat;
+load external/mhex_graph/+imagenet/meta_extended.mat;
 load external/mhex_graph/+imagenet/meta_1k.mat;
 load external/mhex_graph/+imagenet/meta_200.mat;
 
-image_dir = './datasets/imagenet_10k/train';
-iminfo_all = dir([image_dir '/*.jpg']);
+image_ids = textread(image_list_file, '%s');
 
 % keep those classes not in 200 or 1K and remove invalid images (filesize == 0)
 % attach class labels
-image_names = {iminfo_all.name};
-labels = zeros(length(iminfo_all), 1);
-keep_im = false(length(iminfo_all), 1);
-for n = 1:length(iminfo_all)
-  tic_toc_print('preprocessing %d / %d\n', n, length(iminfo_all));
-  wnid = iminfo_all(n).name(1:9);
-  labels(n) = wnid2label_7k(wnid);
-  keep_im(n) = (iminfo_all(n).bytes > 0) ...
-    && ~wnid2label_200.isKey(wnid) ...
-    && ~wnid2label_1k.isKey(wnid);
+labels = zeros(length(image_ids), 1);
+keep_im = false(length(image_ids), 1);
+for n = 1:length(image_ids)
+  tic_toc_print('preprocessing %d / %d\n', n, length(image_ids));
+  wnid = image_ids{n}(1:9);
+  labels(n) = wnid2label_extended(wnid);
+  keep_im(n) = ~wnid2label_200.isKey(wnid) && ~wnid2label_1k.isKey(wnid);
 end
-fprintf('keeping %d out of %d\n', sum(keep_im), length(iminfo_all));
-iminfo_all = iminfo_all(keep_im);
-image_names = image_names(keep_im);
+fprintf('keeping %d out of %d\n', sum(keep_im), length(image_ids));
+image_ids = image_ids(keep_im);
 labels = labels(keep_im);
-assert(length(image_names) == length(labels));
+assert(length(image_ids) == length(labels));
 
-image_names = {iminfo_all.name};
 IM_SIZE = 256;
 channels = 3;
 num_boxes = 1;
@@ -47,7 +44,7 @@ fid = fopen(window_file_name, 'a');
 % start a new line before writing (not necessary since all window file
 % end with '\n')
 % fprintf(fid, '\n');
-numimages = length(image_names);
+numimages = length(image_ids);
 for n = 1:numimages
   tic_toc_print('writing %d / %d\n', n, numimages);
   %     # image_index
@@ -58,7 +55,7 @@ for n = 1:numimages
   %     num_windows
   %     class_index overlap x1 y1 x2 y2
   fprintf(fid, '# %d\n', image_index);
-  fprintf(fid, '%s/%s\n', image_dir, image_names{n});
+  fprintf(fid, '%s/%s\n', image_dir, image_ids{n});
   fprintf(fid, '%d\n%d\n%d\n', channels, IM_SIZE, IM_SIZE);
   fprintf(fid, '%d\n', num_boxes);
   

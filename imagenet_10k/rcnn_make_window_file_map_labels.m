@@ -1,5 +1,6 @@
-function rcnn_make_window_file_map_labels(imdb, out_dir, window_file_name, ...
-    num_to_sample, label_map_flag, label_map_cell, start_index)
+function off_the_end_index = rcnn_make_window_file_map_labels(imdb, out_dir, ...
+    window_file_name, num_to_sample, label_map_flag, label_map_cell, ...
+    start_index)
 % IMPORTANT:
 % description for use_map_flag and label_map_cell
 %   use_map_flag: a length(imdb) * 1 logical array.
@@ -128,3 +129,5 @@ for ii = 1:length(imdb)
   end
 end
 fclose(fid);
+
+off_the_end_index = image_index;
