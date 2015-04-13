@@ -74,5 +74,10 @@ stat_all = stat_all_cls + stat_all_loc;
 clear synsets_extended wnid2label_extended ...
   imagenet_200_id imagenet_1k_id imagenet_10k_id n
 
+%% calculate duplicate rate
+NUM_PER_CLS = 1000;
+duplicate_rate_extended = ...
+  ceil(max(NUM_PER_CLS - stat_all_loc, 1) ./ max(stat_all_cls, 1));
+
 %% save results
-save statistics.mat -v7.3
+save imagenet_10k/statistics.mat -v7.3

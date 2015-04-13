@@ -8,6 +8,10 @@ start_index = % change to your start index % ;
 image_dir = './datasets/imagenet_10k/train';
 image_list_file = './datasets/imagenet_10k/10k_list_train.txt';
 
+duplicate_rate_extended = ...
+  load('./imagenet_10k/statistics.mat', 'duplicate_rate_extended');
+duplicate_rate_extended = duplicate_rate_extended.duplicate_rate_extended;
+
 %% -----------------------------------------------------------------------------
 
 load external/mhex_graph/+imagenet/meta_extended.mat;
@@ -33,7 +37,6 @@ assert(length(image_ids) == length(labels));
 
 IM_SIZE = 256;
 channels = 3;
-num_boxes = 1;
 overlap = 1;
 bboxes = [0, 0, IM_SIZE-1, IM_SIZE-1]; % whole image as bbox
 
@@ -54,12 +57,14 @@ for n = 1:numimages
   %     width
   %     num_windows
   %     class_index overlap x1 y1 x2 y2
+  cls_label = labels(n);
+  box_num = duplicate_rate_extended(cls_label);
   fprintf(fid, '# %d\n', image_index);
   fprintf(fid, '%s/%s\n', image_dir, image_ids{n});
   fprintf(fid, '%d\n%d\n%d\n', channels, IM_SIZE, IM_SIZE);
-  fprintf(fid, '%d\n', num_boxes);
+  fprintf(fid, '%d\n', box_num);
   
-  data = [labels(n) overlap bboxes];
+  data = repmat([cls_label overlap bboxes], box_num, 1);
   fprintf(fid, '%d %.3f %d %d %d %d\n', data');
   image_index = image_index + 1;
 end
