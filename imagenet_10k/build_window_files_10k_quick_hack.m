@@ -39,6 +39,7 @@ IM_SIZE = 256;
 channels = 3;
 overlap = 1;
 bboxes = [0, 0, IM_SIZE-1, IM_SIZE-1]; % whole image as bbox
+extension = 'jpg';
 
 % write window files
 image_index = start_index;
@@ -60,7 +61,7 @@ for n = 1:numimages
   cls_label = labels(n);
   box_num = duplicate_rate_extended(cls_label);
   fprintf(fid, '# %d\n', image_index);
-  fprintf(fid, '%s/%s\n', image_dir, image_ids{n});
+  fprintf(fid, '%s/%s.%s\n', image_dir, image_ids{n}, extension);
   fprintf(fid, '%d\n%d\n%d\n', channels, IM_SIZE, IM_SIZE);
   fprintf(fid, '%d\n', box_num);
   
