@@ -59,5 +59,5 @@ for i = start_id:end_id
   total_time = total_time + toc(tot_th);
   fprintf(' [avg time: %.3fs (total: %.3fs)]\n', ...
     total_time/count, total_time);
-  fprintf(' [avg num: %.3fs]\n', total_num/count);
+  fprintf(' [avg num: %d]\n', round(total_num/count));
 end
